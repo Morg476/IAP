@@ -35,6 +35,12 @@ namespace starter_code.Controllers
         {
             return NoContent();
         }
+
+        [HttpGet("search")]
+        public IActionResult Search(string type, string term)
+        {
+            return Ok($"Search events by type={type} and term={term}");
+        }
     }
 
     

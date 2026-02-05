@@ -4,9 +4,17 @@ using starter_code.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddControllers(); // ✅ already needed
+builder.Services.AddControllers();
+
+// ✅ ADD THIS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod());
+});
 
 // Register custom API services
 builder.RegisterApi(
@@ -15,33 +23,35 @@ builder.RegisterApi(
 
 var app = builder.Build();
 
-// ✅ Minimal API endpoint
-app.MapGet("/", () => "Hello World!");
-
-// Map controllers
-app.MapControllers();
-
 // Start Mk5202 Initialiser
 Initialiser.Start();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
-app.UseApi();
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
+// ✅ MOVE HERE (after routing)
+app.UseCors();
+
 app.UseAuthorization();
+
+app.UseApi();
 
 app.UseRedirectRoot();
 
 app.MapRazorPages();
+
+// Map controllers
+app.MapControllers();
+
+// Optional
+app.MapGet("/", () => "Hello World!");
 
 app.Run();

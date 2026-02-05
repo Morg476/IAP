@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="/css/site.css" rel="stylesheet" />
+    <title>Contact - Event App</title>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav id="siteHeader" class="navbar bg-base-300 sticky top-0 z-50 border-b border-base-500">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <button tabindex="0" class="btn btn-ghost lg:hidden" aria-label="Open menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round" stroke-width="3" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="/" class="active:font-semibold">Home</a></li>
+                    <li><a href="/events.html">Events</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                    <li><a href="/admin.html">Create</a></li>
+                </ul>
+            </div>
+            <a href="/" class="btn btn-ghost text-xl font-bold">Home</a>
+        </div>
+
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="/" class="hover:font-semibold">Home</a></li>
+                <li><a href="/events.html">Events</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/admin.html">Create</a></li>
+            </ul>
+        </div>
+
+        <div class="navbar-end">
+            <!-- Font size & header colour -->
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-outline btn-primary">⚙ Settings</label>
+                <div tabindex="0" class="dropdown-content bg-base-100 rounded-box shadow p-4 w-64 space-y-4">
+                    <div>
+                        <label class="label text-sm font-semibold">Font Size</label>
+                        <select id="fontSizeSelect" class="select select-bordered w-full">
+                            <option value="text-sm">Small</option>
+                            <option value="text-base">Normal</option>
+                            <option value="text-lg">Large</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label text-sm font-semibold">Header Colour</label>
+                        <select id="headerColorSelect" class="select select-bordered w-full">
+                            <option value="bg-base-300">Default</option>
+                            <option value="bg-primary">Primary</option>
+                            <option value="bg-secondary">Secondary</option>
+                            <option value="bg-accent">Accent</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="bg-base-100/80 backdrop-blur border-b border-base-300">
+        <div class="container mx-auto px-4 py-6">
+            <h1 class="text-3xl md:text-4xl font-bold text-primary">Contact Us</h1>
+            <p class="mt-1 text-base-content/70">
+                Have questions? Reach out to us and we'll get back to you promptly.
+            </p>
+        </div>
+    </header>
+
+    <!-- Contact Form Section -->
+    <main class="flex-grow container mx-auto px-4 py-12">
+        <div class="max-w-3xl mx-auto bg-base-100 rounded-xl shadow-xl p-8 space-y-8">
+
+            <!-- Form -->
+            <form id="contact-form" class="space-y-6">
+                <div>
+                    <label for="fullName" class="block text-sm font-medium text-base-content">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" placeholder="Enter Here"
+                           class="input input-bordered w-full mt-2" required pattern="^[A-Za-z\s]+$"
+                           title="Full name can only contain letters and spaces">
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-base-content">Email</label>
+                    <input type="email" id="email" name="email" placeholder="john@example.com"
+                           class="input input-bordered w-full mt-2" required>
+                </div>
+
+                <div>
+                    <label for="phone" class="block text-sm font-medium text-base-content">Phone</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Optional" pattern="^\+?\d{7,15}$"
+                           class="input input-bordered w-full mt-2"
+                           title="Phone number should contain 7 to 15 digits, may include +">
+                </div>
+
+                <div>
+                    <label for="message" class="block text-sm font-medium text-base-content">Message</label>
+                    <textarea id="message" name="message" placeholder="Your message..." rows="5"
+                              class="textarea textarea-bordered w-full mt-2" required></textarea>
+                </div>
+
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </div>
+            </form>
+
+            <!-- Display Messages -->
+            <section>
+                <h2 class="text-xl font-bold mb-4">Messages from users:</h2>
+                <ul id="messages-list" class="space-y-4"></ul>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer m:footer-horizontal text-tertiary-content p-10" aria-label="Site footer">
+        <div class="footer-center mt-4 space-y-2">
+            <p>© 2025 Event App. All rights reserved.</p>
+        </div>
+        <div class="m:footer space-y-2">
+            <p>
+                © 2025 Event App — Created by <strong>Morgan Osborn</strong><br>
+                Contact: N1310588@my.ntu.ac.uk
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        const API_URL = "https://example.com/api/messages"; // Replace with actual API
+
+        const form = document.getElementById('contact-form');
+        const messagesList = document.getElementById('messages-list');
+
+        // Submit form to API
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!form.checkValidity()) {
+                alert("Please correct errors in the form before submitting.");
+                return;
+            }
+
+            const formData = {
+                fullName: form.fullName.value,
+                email: form.email.value,
+                phone: form.phone.value,
+                message: form.message.value
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) throw new Error('Network error');
+
+                alert("Message sent successfully!");
+                form.reset();
+                loadMessages(); // Refreshes messages after submission
+            } catch (err) {
+                alert("Failed to send message. Please try again later.");
+            }
+        });
+
+        // Load messages from API
+        async function loadMessages() {
+            try {
+                const response = await fetch(API_URL);
+                const messages = await response.json();
+                messagesList.innerHTML = "";
+
+                messages.forEach(msg => {
+                    const li = document.createElement("li");
+                    li.className = "p-4 bg-base-200 rounded-lg shadow";
+                    li.innerHTML = `
+                            <strong>${msg.fullName}</strong> (${msg.email})<br>
+                            ${msg.phone ? "📞 " + msg.phone + "<br>" : ""}
+                            <p>${msg.message}</p>
+                        `;
+                    messagesList.appendChild(li);
+                });
+            } catch (err) {
+                messagesList.innerHTML = "<li>Unable to load messages.</li>";
+            }
+        }
+
+        loadMessages(); // Initial load
+
+        // Font size & header color customisation
+        const fontSizeSelect = document.getElementById("fontSizeSelect");
+        const headerColorSelect = document.getElementById("headerColorSelect");
+        const header = document.getElementById("siteHeader");
+        const body = document.body;
+
+        const savedFontSize = localStorage.getItem("fontSize");
+        const savedHeaderColor = localStorage.getItem("headerColor");
+
+        if (savedFontSize) {
+            body.classList.add(savedFontSize);
+            fontSizeSelect.value = savedFontSize;
+        }
+        if (savedHeaderColor) {
+            header.classList.remove("bg-base-300", "bg-primary", "bg-secondary", "bg-accent");
+            header.classList.add(savedHeaderColor);
+            headerColorSelect.value = savedHeaderColor;
+        }
+
+        fontSizeSelect.addEventListener("change", () => {
+            body.classList.remove("text-sm", "text-base", "text-lg");
+            body.classList.add(fontSizeSelect.value);
+            localStorage.setItem("fontSize", fontSizeSelect.value);
+        });
+
+        headerColorSelect.addEventListener("change", () => {
+            header.classList.remove("bg-base-300", "bg-primary", "bg-secondary", "bg-accent");
+            header.classList.add(headerColorSelect.value);
+            localStorage.setItem("headerColor", headerColorSelect.value);
+        });
+    </script>
+
+</body>
+</html>

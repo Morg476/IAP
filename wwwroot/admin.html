@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="/css/site.css" rel="stylesheet" />
+    <title>Admin - Event App</title>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav id="siteHeader" class="navbar sticky top-0 z-50 border-b border-base-500">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <button tabindex="0" class="btn btn-ghost lg:hidden" aria-label="Open menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round" stroke-width="3" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="/" class="active:font-semibold">Home</a></li>
+                    <li><a href="/events.html">Events</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                    <li><a href="/admin.html">Create</a></li>
+                </ul>
+            </div>
+            <a href="/" class="btn btn-ghost text-xl font-bold">Home</a>
+        </div>
+
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="/" class="hover:font-semibold">Home</a></li>
+                <li><a href="/events.html">Events</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/admin.html">Create</a></li>
+            </ul>
+        </div>
+
+        <div class="navbar-end">
+            <!-- Font size & header colour -->
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-outline btn-primary">⚙ Settings</label>
+                <div tabindex="0" class="dropdown-content bg-base-100 rounded-box shadow p-4 w-64 space-y-4">
+                    <div>
+                        <label class="label text-sm font-semibold">Font Size</label>
+                        <select id="fontSizeSelect" class="select select-bordered w-full">
+                            <option value="text-sm">Small</option>
+                            <option value="text-base">Normal</option>
+                            <option value="text-lg">Large</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label text-sm font-semibold">Header Colour</label>
+                        <select id="headerColorSelect" class="select select-bordered w-full">
+                            <option value="bg-base-300">Default</option>
+                            <option value="bg-primary">Primary</option>
+                            <option value="bg-secondary">Secondary</option>
+                            <option value="bg-accent">Accent</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="bg-base-100/80 backdrop-blur border-b border-base-300">
+        <div class="container mx-auto px-4 py-6">
+            <h1 class="text-3xl md:text-4xl font-bold text-primary">Admin Panel</h1>
+            <p class="mt-1 text-base-content/70">Manage organisers, events, and comments.</p>
+        </div>
+    </header>
+
+    <!-- Admin Forms -->
+    <main class="flex-grow container mx-auto px-4 py-12 space-y-12">
+
+        <!-- Create Organiser -->
+        <section class="max-w-3xl mx-auto bg-base-100 rounded-xl shadow-xl p-8">
+            <h2 class="text-2xl font-bold mb-4">Create Event Organiser</h2>
+            <form id="organizerForm" class="space-y-4">
+                <input type="text" name="name" placeholder="Full Name" class="input input-bordered w-full" required pattern="^[A-Za-z\s]+$" title="Letters and spaces only">
+                <input type="email" name="email" placeholder="Email" class="input input-bordered w-full" required>
+                <input type="tel" name="phone" placeholder="Phone" class="input input-bordered w-full" pattern="^\+?\d{7,15}$" title="7-15 digits, may include +">
+                <button type="submit" class="btn btn-primary w-full">Create Organizer</button>
+            </form>
+            <div id="organizerMessage" class="mt-2 text-sm"></div>
+        </section>
+
+        <!-- Create Event -->
+        <section class="max-w-3xl mx-auto bg-base-100 rounded-xl shadow-xl p-8">
+            <h2 class="text-2xl font-bold mb-4">Create New Event</h2>
+            <form id="eventForm" class="space-y-4">
+                <input type="text" name="title" placeholder="Event Title" class="input input-bordered w-full" required>
+                <select name="type" class="select select-bordered w-full" required>
+                    <option value="">Select Type</option>
+                    <option value="workshop">Workshop</option>
+                    <option value="meetup">Meetup</option>
+                    <option value="volunteering">Volunteering</option>
+                </select>
+                <input type="text" name="location" placeholder="Location" class="input input-bordered w-full" required>
+                <input type="date" name="date" class="input input-bordered w-full" required>
+                <input type="url" name="image" placeholder="Image URL" class="input input-bordered w-full" required>
+                <textarea name="description" placeholder="Event Description" class="textarea textarea-bordered w-full" rows="4" required></textarea>
+                <button type="submit" class="btn btn-primary w-full">Create Event</button>
+            </form>
+            <div id="eventMessage" class="mt-2 text-sm"></div>
+        </section>
+
+        <!-- Add Comment -->
+        <section class="max-w-3xl mx-auto bg-base-100 rounded-xl shadow-xl p-8">
+            <h2 class="text-2xl font-bold mb-4">Add Comment to Event</h2>
+            <form id="commentForm" class="space-y-4">
+                <select name="eventId" class="select select-bordered w-full" required>
+                    <option value="">Select Event</option>
+                </select>
+                <input type="text" name="commenter" placeholder="Your Name" class="input input-bordered w-full" required pattern="^[A-Za-z\s]+$" title="Letters and spaces only">
+                <textarea name="comment" placeholder="Comment" class="textarea textarea-bordered w-full" rows="3" required></textarea>
+                <button type="submit" class="btn btn-primary w-full">Add Comment</button>
+            </form>
+            <div id="commentMessage" class="mt-2 text-sm"></div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer m:footer-horizontal text-tertiary-content p-10">
+        <div class="footer-center mt-4 space-y-2">
+            <p>© 2025 Event App. All rights reserved.</p>
+        </div>
+        <div class="m:footer space-y-2">
+            <p>
+                © 2025 Event App — Created by <strong>Morgan Osborn</strong><br>
+                Contact: 0115 676 5672
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        const API_BASE = "http://localhost:5000/api-docs";
+
+        // Utility: handle form submission
+        async function handleForm(formId, endpoint, messageId) {
+            const form = document.getElementById(formId);
+            const msgDiv = document.getElementById(messageId);
+
+            form.addEventListener('submit', async e => {
+                e.preventDefault();
+                if (!form.checkValidity()) {
+                    msgDiv.textContent = "Please fix errors in the form.";
+                    msgDiv.className = "text-red-500 mt-2";
+                    return;
+                }
+
+                const formData = Object.fromEntries(new FormData(form));
+                try {
+                    const res = await fetch(`${API_BASE}/${endpoint}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+                    if (!res.ok) throw new Error("Network error");
+                    msgDiv.textContent = "Success!";
+                    msgDiv.className = "text-green-500 mt-2";
+                    form.reset();
+                    if (endpoint === "events") loadEventsOptions();
+                } catch (err) {
+                    msgDiv.textContent = "Failed. Try again later.";
+                    msgDiv.className = "text-red-500 mt-2";
+                }
+            });
+        }
+
+        handleForm("organizerForm", "organizers", "organizerMessage");
+        handleForm("eventForm", "events", "eventMessage");
+        handleForm("commentForm", "comments", "commentMessage");
+
+        // Populate event select for comments
+        async function loadEventsOptions() {
+            const select = document.querySelector("#commentForm select[name='eventId']");
+            select.innerHTML = '<option value="">Select Event</option>';
+            try {
+                const res = await fetch(`${API_BASE}/events`);
+                const events = await res.json();
+                events.forEach(e => {
+                    const option = document.createElement("option");
+                    option.value = e.id;
+                    option.textContent = e.title;
+                    select.appendChild(option);
+                });
+            } catch (err) {
+                select.innerHTML = '<option value="">Unable to load events</option>';
+            }
+        }
+        loadEventsOptions();
+
+        // Font size & header color customisation
+        const fontSizeSelect = document.getElementById("fontSizeSelect");
+        const headerColorSelect = document.getElementById("headerColorSelect");
+        const header = document.getElementById("siteHeader");
+        const body = document.body;
+
+        const colors = {
+            "bg-base-300": "#d1d5db",
+            "bg-primary": "#570df8",
+            "bg-secondary": "#f000b8",
+            "bg-accent": "#37cdbe"
+        };
+
+        // Load saved preferences
+        const savedFontSize = localStorage.getItem("fontSize");
+        const savedHeaderColor = localStorage.getItem("headerColor");
+
+        if (savedFontSize) {
+            let size = savedFontSize === "text-sm" ? "14px" : savedFontSize === "text-lg" ? "18px" : "16px";
+            body.style.fontSize = size;
+            fontSizeSelect.value = savedFontSize;
+        }
+
+        if (savedHeaderColor) {
+            header.style.backgroundColor = colors[savedHeaderColor];
+            headerColorSelect.value = savedHeaderColor;
+        }
+
+        // Change font size
+        fontSizeSelect.addEventListener("change", () => {
+            let size;
+            switch (fontSizeSelect.value) {
+                case "text-sm": size = "14px"; break;
+                case "text-base": size = "16px"; break;
+                case "text-lg": size = "18px"; break;
+            }
+            body.style.fontSize = size;
+            localStorage.setItem("fontSize", fontSizeSelect.value);
+        });
+
+        // Change header color
+        headerColorSelect.addEventListener("change", () => {
+            header.style.backgroundColor = colors[headerColorSelect.value];
+            localStorage.setItem("headerColor", headerColorSelect.value);
+        });
+    </script>
+
+</body>
+</html>

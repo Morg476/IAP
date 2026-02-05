@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="/css/site.css" rel="stylesheet" />
+    <title>Event App - Events</title>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav id="siteHeader" class="navbar bg-base-300 sticky top-0 z-50 border-b border-base-500">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <button tabindex="0" class="btn btn-ghost lg:hidden" aria-label="Open menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round" stroke-width="3" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="/" class="active:font-semibold">Home</a></li>
+                    <li><a href="/events.html">Events</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                    <li><a href="/admin.html">Create</a></li>
+                </ul>
+            </div>
+            <a href="/" class="btn btn-ghost text-xl font-bold">Home</a>
+        </div>
+
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="/" class="hover:font-semibold">Home</a></li>
+                <li><a href="/events.html">Events</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/admin.html">Create</a></li>
+            </ul>
+        </div>
+
+        <div class="navbar-end">
+            <!-- Font size & header colour -->
+            <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-outline btn-primary">⚙ Settings</label>
+                <div tabindex="0" class="dropdown-content bg-base-100 rounded-box shadow p-4 w-64 space-y-4">
+                    <div>
+                        <label class="label text-sm font-semibold">Font Size</label>
+                        <select id="fontSizeSelect" class="select select-bordered w-full">
+                            <option value="text-sm">Small</option>
+                            <option value="text-base">Normal</option>
+                            <option value="text-lg">Large</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="label text-sm font-semibold">Header Colour</label>
+                        <select id="headerColorSelect" class="select select-bordered w-full">
+                            <option value="bg-base-300">Default</option>
+                            <option value="bg-primary">Primary</option>
+                            <option value="bg-secondary">Secondary</option>
+                            <option value="bg-accent">Accent</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="bg-base-100/80 backdrop-blur border-b border-base-300">
+        <div class="container mx-auto px-4 py-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-bold text-primary">Upcoming Events</h1>
+                <p class="text-base-content/70 mt-1">Discover an event that fits your interests.</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-2 items-start sm:items-center">
+                <!-- Search -->
+                <input id="search-input" type="text" placeholder="Search events…" class="input input-bordered w-full sm:w-64" />
+
+                <!-- Filter Dropdown -->
+                <div class="dropdown">
+                    <button tabindex="0" class="btn btn-outline btn-primary">
+                        Filter
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none"
+                             viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52">
+                        <li><a href="#" data-filter="all">All Events</a></li>
+                        <li><a href="#" data-filter="workshop">Workshops</a></li>
+                        <li><a href="#" data-filter="meetup">Meetups</a></li>
+                        <li><a href="#" data-filter="volunteering">Volunteering</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats -->
+    <section class="container mx-auto px-4 mt-6 grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div class="stat bg-base-100 rounded-xl shadow p-6">
+            <div class="stat-title text-base-content/70">Upcoming</div>
+            <div class="stat-value text-primary">18</div>
+            <div class="stat-desc text-base-content/70">Next 30 days</div>
+        </div>
+        <div class="stat bg-base-100 rounded-xl shadow p-6">
+            <div class="stat-title text-base-content/70">Registered</div>
+            <div class="stat-value text-secondary">254</div>
+            <div class="stat-desc text-base-content/70">Across all events</div>
+        </div>
+        <div class="stat bg-base-100 rounded-xl shadow p-6">
+            <div class="stat-title text-base-content/70">Hosts</div>
+            <div class="stat-value text-accent">36</div>
+            <div class="stat-desc text-base-content/70">Active organisers</div>
+        </div>
+    </section>
+
+    <!-- Events Grid -->
+    <main class="container mx-auto px-4 py-10">
+        <div id="events-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+            <!-- Event Card -->
+            <a href="event.html" class="card bg-base-100 shadow-xl rounded-xl hover:shadow-2xl transition workshop">
+                <figure><img src="" alt="Web Development Workshop"></figure>
+                <div class="card-body">
+                    <h2 class="card-title text-primary">Web Development Workshop</h2>
+                    <div class="badge badge-primary">Workshop</div>
+                    <p class="text-sm text-base-content/70"> Campus Hall A</p>
+                    <p class="text-sm text-base-content/70"> March 20, 2025</p>
+                    <div class="card-actions justify-end">
+                        <span class="btn btn-primary btn-sm">View Details</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Event Card -->
+            <a href="event.html" class="card bg-base-100 shadow-xl rounded-xl hover:shadow-2xl transition meetup">
+                <figure><img src="" alt="Tech Meetup"></figure>
+                <div class="card-body">
+                    <h2 class="card-title text-accent">Tech Meetup</h2>
+                    <div class="badge badge-accent">Meetup</div>
+                    <p class="text-sm text-base-content/70"> City Library</p>
+                    <p class="text-sm text-base-content/70"> April 2, 2025</p>
+                    <div class="card-actions justify-end">
+                        <span class="btn btn-accent btn-sm">View Details</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Event Card -->
+            <a href="event.html" class="card bg-base-100 shadow-xl rounded-xl hover:shadow-2xl transition volunteering">
+                <figure><img src="" alt="Community Volunteering"></figure>
+                <div class="card-body">
+                    <h2 class="card-title text-secondary">Community Volunteering</h2>
+                    <div class="badge badge-secondary">Volunteering</div>
+                    <p class="text-sm text-base-content/70"> Community Center</p>
+                    <p class="text-sm text-base-content/70"> April 10, 2025</p>
+                    <div class="card-actions justify-end">
+                        <span class="btn btn-secondary btn-sm">View Details</span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer text-tertiary-content p-10 mt-auto bg-base-200">
+        <div class="footer-center space-y-2">
+            <p>© 2025 Event App. All rights reserved.</p>
+            <p>
+                Created by <strong>Morgan Osborn</strong><br>
+                Contact: 0115 676 5672
+            </p>
+        </div>
+    </footer>
+
+    <!-- Filter/Search Script -->
+    <script>
+        const filterButtons = document.querySelectorAll('[data-filter]');
+        const eventsGrid = document.getElementById('events-grid');
+        const searchInput = document.getElementById('search-input');
+
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.preventDefault();
+                const filter = btn.dataset.filter;
+                Array.from(eventsGrid.children).forEach(card => {
+                    card.style.display = (filter === 'all' || card.classList.contains(filter)) ? '' : 'none';
+                });
+            });
+        });
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            Array.from(eventsGrid.children).forEach(card => {
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+                card.style.display = title.includes(query) ? '' : 'none';
+            });
+        });
+    </script>
+
+</body>
+</html>

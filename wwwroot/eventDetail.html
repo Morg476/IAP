@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="/css/site.css" rel="stylesheet" />
+    <title>Event App</title>
+</head>
+
+<body class="flex flex-col min-h-screen">
+
+    <script src="/_framework/aspnetcore-browser-refresh.js"></script>
+
+    <main class="flex flex-col flex-grow">
+
+        <!-- Navigation -->
+        <nav class="navbar bg-base-300 sticky top-0 z-50 border-b border-base-500">
+            <div class="navbar-start">
+                <div class="dropdown">
+                    <button tabindex="0" class="btn btn-ghost lg:hidden" aria-label="Open menu">☰</button>
+                    <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/events.html">Events</a></li>
+                        <li><a href="/contact.html">Contact</a></li>
+                        <li><a href="/admin.html">Create</a></li>
+                    </ul>
+                </div>
+                <a href="/" class="btn btn-ghost text-xl font-bold">Home</a>
+            </div>
+
+            <div class="navbar-center hidden lg:flex">
+                <ul class="menu menu-horizontal px-1">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/events.html">Events</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                    <li><a href="/admin.html">Create</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Header -->
+        <header class="bg-base-100/80 backdrop-blur border-b border-base-300">
+            <div class="container mx-auto px-4 py-6">
+                <h1 class="text-3xl md:text-4xl font-bold">Event App Overview</h1>
+                <p class="mt-1 text-base-content/70">
+                    Discover what’s happening near you, manage your events, and connect with communities.
+                </p>
+                <a href="/admin.html" class="btn btn-primary mt-4">Create Event</a>
+            </div>
+        </header>
+
+        <!-- Hero -->
+        <section class="hero min-h-screen bg-primary relative">
+            <div class="hero-overlay bg-black/40"></div>
+
+            <div class="hero-content flex-col lg:flex-row gap-8 text-white">
+                <article class="max-w-md text-center lg:text-left">
+                    <h2 class="text-5xl font-bold">Welcome to Event App!</h2>
+                    <p class="py-6">
+                        Whether you're looking to attend events or host your own,
+                        Event App connects people and moments.
+                    </p>
+                    <a href="/events.html" class="btn btn-primary">Browse Events</a>
+                </article>
+
+                <aside class="bg-base-100 text-base-content rounded-xl shadow-lg p-6 w-full lg:w-80">
+                    <h3 class="text-xl font-semibold mb-4">Upcoming Highlights</h3>
+                    <ul class="space-y-3">
+                        <li><span class="badge badge-primary">Nov 25</span> Tec h Meetup</li>
+                        <li><span class="badge badge-secondary">Dec 02</span> Art Workshop</li>
+                        <li><span class="badge badge-accent">Dec 10</span> Community Volunteering</li>
+                    </ul>
+                    <a href="/events.html" class="btn btn-outline mt-4 w-full">View All Events</a>
+                </aside>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="container mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="stat bg-base-100 p-6 shadow rounded-xl">
+                    <div class="stat-value text-primary">$2.1T</div>
+                    <div class="stat-title">Global Market</div>
+                </div>
+                <div class="stat bg-base-100 p-6 shadow rounded-xl">
+                    <div class="stat-value text-secondary">+53%</div>
+                    <div class="stat-title">Attendance Growth</div>
+                </div>
+                <div class="stat bg-base-100 p-6 shadow rounded-xl">
+                    <div class="stat-value text-accent">80%</div>
+                    <div class="stat-title">Attendee Interest</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Info -->
+        <section class="container mx-auto px-4 py-12 bg-base-200 rounded-xl shadow-lg">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card bg-base-100 p-6 shadow text-center">
+                    <h3 class="card-title text-primary">Connect</h3>
+                    <p>Meet people and build networks.</p>
+                </div>
+                <div class="card bg-base-100 p-6 shadow text-center">
+                    <h3 class="card-title text-secondary">Learn</h3>
+                    <p>Grow skills through experiences.</p>
+                </div>
+                <div class="card bg-base-100 p-6 shadow text-center">
+                    <h3 class="card-title text-accent">Impact</h3>
+                    <p>Create meaningful change.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer m:footer-horizontal text-tertiary-content p-10" aria-label="Site footer">
+        <div class="footer-center mt-4 space-y-2">
+            <p>© 2025 Event App. All rights reserved.</p>
+        </div>
+        <div class="m:footer space-y-2">
+            <p>
+                © 2025 Event App — Created by <strong>Morgan Osborn</strong><br>
+                Contact: N1310588@my.ntu.ac.uk
+            </p>
+        </div>
+    </footer>
+
+    <script src="/js/site.js"></script>
+</body>
+</html>

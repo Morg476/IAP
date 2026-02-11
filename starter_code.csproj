@@ -16,12 +16,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="modules/api/*.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" Link="%(Filename)%(Extension)" />
-        <None Include="modules/api/*.json" CopyToOutputDirectory="PreserveNewest" Visible="false" Link="%(Filename)%(Extension)" />
-        <None Include="modules/api/runtimes/**" CopyToOutputDirectory="PreserveNewest" Visible="false" LinkBase="runtimes" />
-        <None Include="modules/mk_5202_i/*.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" Link="%(Filename)%(Extension)" />
-        <None Include="modules/mk_5202_i/*.json" CopyToOutputDirectory="PreserveNewest" Visible="false" Link="%(Filename)%(Extension)" />
-    </ItemGroup>
+    <None Include="modules/mk_5202_i/*.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" Link="%(Filename)%(Extension)" />
+    <None Include="modules/mk_5202_i/*.json" CopyToOutputDirectory="PreserveNewest" Visible="false" Link="%(Filename)%(Extension)" />
+</ItemGroup>
+
 
     <ItemGroup>
       <None Include="wwwroot\events.html" />
@@ -34,6 +32,16 @@
         <PackageReference Include="Dapper.Fluent" Version="2.0.0" />
         <PackageReference Include="Dapper.FluentMap" Version="2.0.0" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.9" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.12" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.12">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.12" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.12">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Microsoft.OpenApi" Version="1.6.17" />
     </ItemGroup>
 

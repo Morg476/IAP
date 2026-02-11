@@ -1,13 +1,16 @@
-﻿using api;
-using starter_code;
+﻿using starter_code;
 using starter_code.Middleware;
+using starter_code.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 
-// ✅ ADD THIS
+builder.Services.AddDbContext<EventAppDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -15,11 +18,6 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
-
-// Register custom API services
-builder.RegisterApi(
-    Initialiser.GetDir(builder.Configuration.GetValue<string>("DbFile") ?? "")
-);
 
 var app = builder.Build();
 
@@ -37,12 +35,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// ✅ MOVE HERE (after routing)
 app.UseCors();
 
 app.UseAuthorization();
-
-app.UseApi();
 
 app.UseRedirectRoot();
 

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using starter_code.Data;
 using starter_code.Models;
 
 namespace starter_code.Controllers
@@ -7,71 +9,64 @@ namespace starter_code.Controllers
     [Route("api/v2/[controller]")]
     public class MessagesController : ControllerBase
     {
-        // Simulated database with hardcoded data
-        private static readonly List<Message> Messages = new()
+        private readonly EventAppDbContext _context;
+
+        public MessagesController(EventAppDbContext context)
         {
-            new Message
-            {
-                Id = 1,
-                Name = "Alice Brown",
-                Email = "alice@example.com",
-                Phone = "+44 1111 222333",
-                Content = "I am interested in your training programs."
-            },
-            new Message
-            {
-                Id = 2,
-                Name = "Bob Smith",
-                Email = "bob@example.com",
-                Content = "Please send more details about pricing."
-            }
-        };
+            _context = context;
+        }
 
         // READ ALL
         [HttpGet]
-        public IActionResult GetAll() => Ok(Messages);
+        public async Task<IActionResult> GetAll()
+            => Ok(await _context.Messages.AsNoTracking().ToListAsync());
 
         // READ ONE
         [HttpGet("{id:int}")]
-        public IActionResult GetOne(int id)
+        public async Task<IActionResult> GetOne(int id)
         {
-            var message = Messages.FirstOrDefault(m => m.Id == id);
+            var message = await _context.Messages.AsNoTracking()
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             return message is null ? NotFound() : Ok(message);
         }
 
         // CREATE
         [HttpPost]
-        public IActionResult Create([FromBody] Message message)
+        public async Task<IActionResult> Create([FromBody] Message message)
         {
-            message.Id = Messages.Count + 1;
-            Messages.Add(message);
+            message.Id = null; // let SQLite autogenerate
+            _context.Messages.Add(message);
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetOne), new { id = message.Id }, message);
         }
 
-        // UPDATE (Full replacement)
+        // UPDATE
         [HttpPut("{id:int}")]
-        public IActionResult UpdateMessage(int id, [FromBody] Message updatedMessage)
+        public async Task<IActionResult> UpdateMessage(int id, [FromBody] Message updated)
         {
-            var existing = Messages.FirstOrDefault(m => m.Id == id);
+            var existing = await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
             if (existing is null) return NotFound();
 
-            existing.Name = updatedMessage.Name;
-            existing.Email = updatedMessage.Email;
-            existing.Phone = updatedMessage.Phone;
-            existing.Content = updatedMessage.Content;
+            existing.Name = updated.Name;
+            existing.Email = updated.Email;
+            existing.Phone = updated.Phone;
+            existing.Content = updated.Content;
 
+            await _context.SaveChangesAsync();
             return Ok(existing);
         }
 
         // DELETE
         [HttpDelete("{id:int}")]
-        public IActionResult DeleteMessage(int id)
+        public async Task<IActionResult> DeleteMessage(int id)
         {
-            var message = Messages.FirstOrDefault(m => m.Id == id);
-            if (message is null) return NotFound();
+            var existing = await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
+            if (existing is null) return NotFound();
 
-            Messages.Remove(message);
+            _context.Messages.Remove(existing);
+            await _context.SaveChangesAsync();
             return NoContent();
         }
     }

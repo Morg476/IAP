@@ -10,6 +10,9 @@ namespace starter_code.Data
 
         public DbSet<Message> Messages => Set<Message>();
 
+        // ✅ ADD THIS LINE
+        public DbSet<User> Users => Set<User>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -20,6 +23,10 @@ namespace starter_code.Data
             modelBuilder.Entity<Message>()
                 .Property(x => x.Id)
                 .ValueGeneratedOnAdd();
+
+            
+            modelBuilder.Entity<User>()
+                .HasKey(u => u.Id);
         }
     }
 }

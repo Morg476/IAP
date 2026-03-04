@@ -1,11 +1,10 @@
-﻿using starter_code;
-using starter_code.Middleware;
-using starter_code.Data;
-
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using starter_code;
+using starter_code.Data;
+using starter_code.Middleware;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,7 +39,32 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod());
 });
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Event Booking API",
+        Version = "v1",
+        Description = "API for managing events, bookings, and comments",
+        Contact = new OpenApiContact
+        {
+            Name = "Morgan Osborn",
+            Email = "N1310588@my.ntu.ac.uk"
+        }
+    });
+});
+
 var app = builder.Build();
+
+// Enable Swagger
+app.UseSwagger();
+
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Event Booking API v1");
+    options.RoutePrefix = "swagger";
+});
 
 // Start Mk5202 Initialiser
 Initialiser.Start();
@@ -51,7 +75,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection()
+    ;
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -59,11 +84,13 @@ app.UseRouting();
 app.UseCors();
 
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.UseRedirectRoot();
 
 app.MapRazorPages();
+
 app.MapControllers();
 
 app.MapGet("/", () => "Hello World!");

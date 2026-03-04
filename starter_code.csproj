@@ -6,14 +6,11 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
-    <ItemGroup>
-        <Reference Include="api">
-            <HintPath>./modules/api/api.dll</HintPath>
-        </Reference>
-        <Reference Include="mk_5202_i">
-            <HintPath>./modules/mk_5202_i/mk_5202_i.dll</HintPath>
-        </Reference>
-    </ItemGroup>
+  <ItemGroup>
+    <Reference Include="mk_5202_i">
+      <HintPath>./modules/mk_5202_i/mk_5202_i.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
     <ItemGroup>
     <None Include="modules/mk_5202_i/*.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" Link="%(Filename)%(Extension)" />
@@ -44,7 +41,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.OpenApi" Version="1.6.17" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
     </ItemGroup>
 
 </Project>

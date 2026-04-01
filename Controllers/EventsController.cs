@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace starter_code.Controllers
 {
@@ -9,39 +10,104 @@ namespace starter_code.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Ok("List of events");
+            var events = new[]
+            {
+                new { Id = 1, Title = "Music Festival", Category = "Music", Location = "Central Park" },
+                new { Id = 2, Title = "Tech Expo", Category = "Technology", Location = "City Hall" }
+            };
+
+            return Ok(events);
         }
 
         [HttpGet("{id:int}")]
         public IActionResult GetOne(int id)
         {
-            return Ok($"Event with id {id}");
+            var ev = new { Id = id, Title = "Sample Event", Category = "General", Location = "Central" };
+            return Ok(ev);
         }
 
+        [Authorize]
         [HttpPost]
-        public IActionResult Create([FromBody] string eventName)
+        public IActionResult Create([FromBody] EventCreateDto dto)
         {
-            return Created("", eventName);
+            if (!User.Identity?.IsAuthenticated ?? true)
+                return Unauthorized();
+
+            if (!User.IsInRole("Admin"))
+                return Forbid();
+
+            if (dto == null)
+                return BadRequest();
+
+            return Created("/api/v2/events/1", dto);
         }
 
+        [Authorize]
         [HttpPut("{id:int}")]
-        public IActionResult Update(int id, [FromBody] string eventName)
+        public IActionResult Update(int id, [FromBody] EventCreateDto dto)
         {
-            return Ok($"Event {id} updated");
+            if (!User.Identity?.IsAuthenticated ?? true)
+                return Unauthorized();
+
+            if (!User.IsInRole("Admin"))
+                return Forbid();
+
+            if (dto == null)
+                return BadRequest();
+
+            var updatedEvent = new
+            {
+                Id = id,
+                Title = dto.Title,
+                Category = dto.Category,
+                Location = dto.Location
+            };
+
+            return Ok(updatedEvent);
         }
 
+        [Authorize]
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
+            if (!User.Identity?.IsAuthenticated ?? true)
+                return Unauthorized();
+
+            if (!User.IsInRole("Admin"))
+                return Forbid();
+
             return NoContent();
         }
 
         [HttpGet("search")]
-        public IActionResult Search(string type, string term)
+        public IActionResult Search([FromQuery] string? title, [FromQuery] string? category, [FromQuery] string? location)
         {
-            return Ok($"Search events by type={type} and term={term}");
+            var events = new[]
+            {
+                new { Id = 1, Title = "Music Festival", Category = "Music", Location = "Central Park" },
+                new { Id = 2, Title = "Central Music Night", Category = "Music", Location = "Central" },
+                new { Id = 3, Title = "Business Meetup", Category = "Business", Location = "Downtown" }
+            };
+
+            var results = events.AsEnumerable();
+
+            if (!string.IsNullOrWhiteSpace(title))
+                results = results.Where(e => e.Title.Contains(title, StringComparison.OrdinalIgnoreCase));
+
+            if (!string.IsNullOrWhiteSpace(category))
+                results = results.Where(e => e.Category.Contains(category, StringComparison.OrdinalIgnoreCase));
+
+            if (!string.IsNullOrWhiteSpace(location))
+                results = results.Where(e => e.Location.Contains(location, StringComparison.OrdinalIgnoreCase));
+
+            return Ok(results);
         }
     }
 
-    
+    public class EventCreateDto
+    {
+        public string? Title { get; set; }
+        public string? Category { get; set; }
+        public string? Location { get; set; }
+    }
 }

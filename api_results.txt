@@ -1,0 +1,61 @@
+API CHECKER - AUTOMATED GRADING TOOL
+Testing API at: http://localhost:5201
+Timestamp: 2026-04-01 17:40:24
+==========
+
+--- AUTHENTICATION SETUP ---
+
+  PASS [SETUP]    POST   /api/v2/auth/register + /api/v2/auth/login    OK       Admin register & login
+  PASS [SETUP]    POST   /api/v2/auth/register + /api/v2/auth/login    OK       User register & login
+  PASS [SETUP]    POST   /api/v2/auth/register + /api/v2/auth/login    OK       User2 register & login
+==========
+
+--- EVENTS ---
+
+  FAIL [ENDPOINT] POST   /api/v2/events                                FAILED   Admin Create Event - Expected 201, got 401
+  PASS [ENDPOINT] GET    /api/v2/events                                OK       View All Events
+  PASS [ENDPOINT] GET    /api/v2/events/search?title=Music             OK       Search by Title
+  INFO:   -> Search returned 2 result(s)
+  PASS [ENDPOINT] GET    /api/v2/events/search?category=Music&location=Central OK       Search by Multiple Attributes
+  PASS [AUTH]     POST   /api/v2/events                                OK       Public Cannot Create Event
+  FAIL [AUTH]     POST   /api/v2/events                                FAILED   User Cannot Create Event - Expected 403, got 401
+==========
+
+--- ORGANIZERS ---
+
+  PASS [ENDPOINT] GET    /api/v2/organizers                            OK       View All Organizers
+  FAIL [ENDPOINT] POST   /api/v2/organizers                            FAILED   Admin Create Organizer - Expected 201, got 401
+  PASS [AUTH]     POST   /api/v2/organizers                            OK       Public Cannot Create Organizer
+  FAIL [AUTH]     POST   /api/v2/organizers                            FAILED   User Cannot Create Organizer - Expected 403, got 401
+==========
+
+--- MESSAGES ---
+
+  PASS [ENDPOINT] POST   /api/v2/messages                              OK       Public Create Message
+  PASS [ENDPOINT] POST   /api/v2/messages                              OK       User Create Message
+  PASS [ENDPOINT] POST   /api/v2/messages                              OK       Admin Create Message
+  FAIL [ENDPOINT] GET    /api/v2/messages                              FAILED   Admin View All Messages - Expected 200, got 401
+  FAIL [ENDPOINT] DELETE /api/v2/messages/11                           FAILED   Admin Delete Message - Expected 204, got 401
+  PASS [AUTH]     GET    /api/v2/messages                              OK       Public Cannot View Messages
+  FAIL [AUTH]     GET    /api/v2/messages                              FAILED   User Cannot View Messages - Expected 403, got 401
+  PASS [AUTH]     DELETE /api/v2/messages/999                          OK       Public Cannot Delete Message
+  FAIL [AUTH]     DELETE /api/v2/messages/999                          FAILED   User Cannot Delete Message - Expected 403, got 401
+==========
+
+--- COMMENTS ---
+
+  INFO: No test events available - skipping comments tests
+==========
+
+--- BOOKINGS ---
+
+  INFO: Not enough test events - skipping bookings tests
+==========
+==========
+
+--- FINAL SUMMARY ---
+
+  ENDPOINT TESTS (Accessibility):   7/11 passed (63.6%) - 10.2/16 points
+  BOOKING TESTS:                    0/0 passed (0%) - 0/16 points
+  AUTH TESTS (Access Control):       4/8 passed (50%) - 8/16 points
+==========

@@ -95,4 +95,16 @@ app.MapControllers();
 
 app.MapGet("/", () => "Hello World!");
 
+// API Checker endpoint
+app.MapGet("/api/checker/run", async (IConfiguration config) =>
+{
+    var baseUrl = config["ApiChecker:BaseUrl"] ?? "http://localhost:5201";
+    var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "api_results.txt");
+
+    await ApiChecker.ApiChecker.RunTests(baseUrl, outputPath);
+
+    var results = await File.ReadAllTextAsync(outputPath);
+    return Results.Text(results, "text/plain");
+});
+
 app.Run();

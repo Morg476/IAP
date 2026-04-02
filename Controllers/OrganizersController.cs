@@ -19,16 +19,10 @@ namespace starter_code.Controllers
             return Ok(organizers);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        [Authorize]
         public IActionResult Create([FromBody] object organizer)
         {
-            if (!User.Identity?.IsAuthenticated ?? true)
-                return Unauthorized();
-
-            if (!User.IsInRole("Admin"))
-                return Forbid();
-
             return Created("/api/v2/organizers/1", organizer);
         }
     }

@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using starter_code;
 using starter_code.Data;
 using starter_code.Middleware;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +16,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<EventAppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
-builder.Services.AddAuthentication("Bearer")
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer("Bearer", options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -27,9 +28,37 @@ builder.Services.AddAuthentication("Bearer")
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+
+            NameClaimType = ClaimTypes.Name,
+            RoleClaimType = ClaimTypes.Role
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(authHeader))
+                {
+                    if (authHeader.StartsWith("Bearer "))
+                        context.Token = authHeader.Substring("Bearer ".Length);
+                    else
+                        context.Token = authHeader;
+                }
+
+                if (string.IsNullOrEmpty(context.Token))
+                {
+                    context.Token = context.Request.Query["token"];
+                }
+
+                return Task.CompletedTask;
+            }
         };
     });
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddCors(options =>
 {
@@ -56,7 +85,11 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
-
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<EventAppDbContext>();
+    db.Database.EnsureCreated();
+}
 // Enable Swagger
 app.UseSwagger();
 

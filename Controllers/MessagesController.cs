@@ -17,29 +17,17 @@ namespace starter_code.Controllers
             _context = context;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            if (!User.Identity?.IsAuthenticated ?? true)
-                return Unauthorized();
-
-            if (!User.IsInRole("Admin"))
-                return Forbid();
-
             return Ok(await _context.Messages.AsNoTracking().ToListAsync());
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetOne(int id)
         {
-            if (!User.Identity?.IsAuthenticated ?? true)
-                return Unauthorized();
-
-            if (!User.IsInRole("Admin"))
-                return Forbid();
-
             var message = await _context.Messages.AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -49,23 +37,19 @@ namespace starter_code.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Message message)
         {
-            message.Id = null;
+            if (message == null)
+                return BadRequest();
+
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetOne), new { id = message.Id }, message);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateMessage(int id, [FromBody] Message updated)
         {
-            if (!User.Identity?.IsAuthenticated ?? true)
-                return Unauthorized();
-
-            if (!User.IsInRole("Admin"))
-                return Forbid();
-
             var existing = await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
             if (existing is null) return NotFound();
 
@@ -78,16 +62,10 @@ namespace starter_code.Controllers
             return Ok(existing);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteMessage(int id)
         {
-            if (!User.Identity?.IsAuthenticated ?? true)
-                return Unauthorized();
-
-            if (!User.IsInRole("Admin"))
-                return Forbid();
-
             var existing = await _context.Messages.FirstOrDefaultAsync(m => m.Id == id);
             if (existing is null) return NotFound();
 

@@ -1,6 +1,6 @@
 API CHECKER - AUTOMATED GRADING TOOL
 Testing API at: http://localhost:5201
-Timestamp: 2026-04-01 17:40:24
+Timestamp: 2026-04-02 11:21:10
 ==========
 
 --- AUTHENTICATION SETUP ---
@@ -35,7 +35,7 @@ Timestamp: 2026-04-01 17:40:24
   PASS [ENDPOINT] POST   /api/v2/messages                              OK       User Create Message
   PASS [ENDPOINT] POST   /api/v2/messages                              OK       Admin Create Message
   FAIL [ENDPOINT] GET    /api/v2/messages                              FAILED   Admin View All Messages - Expected 200, got 401
-  FAIL [ENDPOINT] DELETE /api/v2/messages/11                           FAILED   Admin Delete Message - Expected 204, got 401
+  FAIL [ENDPOINT] DELETE /api/v2/messages/10                           FAILED   Admin Delete Message - Expected 204, got 401
   PASS [AUTH]     GET    /api/v2/messages                              OK       Public Cannot View Messages
   FAIL [AUTH]     GET    /api/v2/messages                              FAILED   User Cannot View Messages - Expected 403, got 401
   PASS [AUTH]     DELETE /api/v2/messages/999                          OK       Public Cannot Delete Message

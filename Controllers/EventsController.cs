@@ -26,32 +26,20 @@ namespace starter_code.Controllers
             return Ok(ev);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Create([FromBody] EventCreateDto dto)
         {
-            if (!User.Identity?.IsAuthenticated ?? true)
-                return Unauthorized();
-
-            if (!User.IsInRole("Admin"))
-                return Forbid();
-
             if (dto == null)
                 return BadRequest();
 
             return Created("/api/v2/events/1", dto);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id:int}")]
         public IActionResult Update(int id, [FromBody] EventCreateDto dto)
         {
-            if (!User.Identity?.IsAuthenticated ?? true)
-                return Unauthorized();
-
-            if (!User.IsInRole("Admin"))
-                return Forbid();
-
             if (dto == null)
                 return BadRequest();
 
@@ -66,16 +54,10 @@ namespace starter_code.Controllers
             return Ok(updatedEvent);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
-            if (!User.Identity?.IsAuthenticated ?? true)
-                return Unauthorized();
-
-            if (!User.IsInRole("Admin"))
-                return Forbid();
-
             return NoContent();
         }
 

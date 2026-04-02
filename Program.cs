@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using starter_code;
 using starter_code.Data;
+using starter_code.Models;
 using starter_code.Middleware;
 using System.Security.Claims;
 using System.Text;
@@ -89,6 +90,26 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<EventAppDbContext>();
     db.Database.EnsureCreated();
+
+    if (!db.Events.Any())
+    {
+        db.Events.AddRange(
+            new starter_code.Models.Event
+            {
+                Title = "Music Festival",
+                Category = "Music",
+                Location = "Central Park"
+            },
+            new starter_code.Models.Event
+            {
+                Title = "Tech Expo",
+                Category = "Technology",
+                Location = "City Hall"
+            }
+        );
+
+        db.SaveChanges();
+    }
 }
 // Enable Swagger
 app.UseSwagger();

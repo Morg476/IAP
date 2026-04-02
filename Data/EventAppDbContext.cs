@@ -9,24 +9,17 @@ namespace starter_code.Data
             : base(options) { }
 
         public DbSet<Message> Messages => Set<Message>();
-
-        // ✅ ADD THIS LINE
         public DbSet<User> Users => Set<User>();
+        public DbSet<Event> Events => Set<Event>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Message>()
-                .HasKey(x => x.Id);
+            modelBuilder.Entity<Message>().HasKey(x => x.Id);
+            modelBuilder.Entity<Message>().Property(x => x.Id).ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<Message>()
-                .Property(x => x.Id)
-                .ValueGeneratedOnAdd();
-
-            
-            modelBuilder.Entity<User>()
-                .HasKey(u => u.Id);
+            modelBuilder.Entity<User>().HasKey(u => u.Id);
         }
     }
 }

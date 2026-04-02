@@ -116,7 +116,7 @@
 
             <!-- Display Messages -->
             <section>
-                <h2 class="text-xl font-bold mb-4">Messages from users:</h2>
+                <h2 class="text-xl font-bold mb-4">Admin Message View</h2>
                 <ul id="messages-list" class="space-y-4"></ul>
             </section>
 
@@ -138,7 +138,7 @@
 
     <!-- Scripts -->
     <script>
-        const API_URL = "https://example.com/api/messages"; // Replace with actual API
+        const API_URL = "/api/v2/messages";
 
         const form = document.getElementById('contact-form');
         const messagesList = document.getElementById('messages-list');
@@ -153,10 +153,10 @@
             }
 
             const formData = {
-                fullName: form.fullName.value,
+                name: form.fullName.value,
                 email: form.email.value,
                 phone: form.phone.value,
-                message: form.message.value
+                content: form.message.value
             };
 
             try {
@@ -187,14 +187,14 @@
                     const li = document.createElement("li");
                     li.className = "p-4 bg-base-200 rounded-lg shadow";
                     li.innerHTML = `
-                            <strong>${msg.fullName}</strong> (${msg.email})<br>
-                            ${msg.phone ? "📞 " + msg.phone + "<br>" : ""}
-                            <p>${msg.message}</p>
-                        `;
+                        <strong>${msg.name ?? "Unknown"}</strong> (${msg.email ?? "No email"})<br>
+                        ${msg.phone ? "📞 " + msg.phone + "<br>" : ""}
+                        <p>${msg.content ?? ""}</p>
+    `;
                     messagesList.appendChild(li);
                 });
             } catch (err) {
-                messagesList.innerHTML = "<li>Unable to load messages.</li>";
+                messagesList.innerHTML = "<li>Messages are only visible to admins.</li>";
             }
         }
 

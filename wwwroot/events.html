@@ -114,57 +114,13 @@
         <div class="stat bg-base-100 rounded-xl shadow p-6">
             <div class="stat-title text-base-content/70">Hosts</div>
             <div class="stat-value text-accent">36</div>
-            <div class="stat-desc text-base-content/70">Active organisers</div>
+            <div class="stat-desc text-base-content/70">Active Organizers</div>
         </div>
     </section>
 
     <!-- Events Grid -->
     <main class="container mx-auto px-4 py-10">
-        <div id="events-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-
-            <!-- Event Card -->
-            <a href="event.html" class="card bg-base-100 shadow-xl rounded-xl hover:shadow-2xl transition workshop">
-                <figure><img src="" alt="Web Development Workshop"></figure>
-                <div class="card-body">
-                    <h2 class="card-title text-primary">Web Development Workshop</h2>
-                    <div class="badge badge-primary">Workshop</div>
-                    <p class="text-sm text-base-content/70"> Campus Hall A</p>
-                    <p class="text-sm text-base-content/70"> March 20, 2025</p>
-                    <div class="card-actions justify-end">
-                        <span class="btn btn-primary btn-sm">View Details</span>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Event Card -->
-            <a href="event.html" class="card bg-base-100 shadow-xl rounded-xl hover:shadow-2xl transition meetup">
-                <figure><img src="" alt="Tech Meetup"></figure>
-                <div class="card-body">
-                    <h2 class="card-title text-accent">Tech Meetup</h2>
-                    <div class="badge badge-accent">Meetup</div>
-                    <p class="text-sm text-base-content/70"> City Library</p>
-                    <p class="text-sm text-base-content/70"> April 2, 2025</p>
-                    <div class="card-actions justify-end">
-                        <span class="btn btn-accent btn-sm">View Details</span>
-                    </div>
-                </div>
-            </a>
-
-            <!-- Event Card -->
-            <a href="event.html" class="card bg-base-100 shadow-xl rounded-xl hover:shadow-2xl transition volunteering">
-                <figure><img src="" alt="Community Volunteering"></figure>
-                <div class="card-body">
-                    <h2 class="card-title text-secondary">Community Volunteering</h2>
-                    <div class="badge badge-secondary">Volunteering</div>
-                    <p class="text-sm text-base-content/70"> Community Center</p>
-                    <p class="text-sm text-base-content/70"> April 10, 2025</p>
-                    <div class="card-actions justify-end">
-                        <span class="btn btn-secondary btn-sm">View Details</span>
-                    </div>
-                </div>
-            </a>
-
-        </div>
+        <div id="events-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div
     </main>
 
     <!-- Footer -->
@@ -178,29 +134,104 @@
         </div>
     </footer>
 
-    <!-- Filter/Search Script -->
     <script>
-        const filterButtons = document.querySelectorAll('[data-filter]');
         const eventsGrid = document.getElementById('events-grid');
         const searchInput = document.getElementById('search-input');
+        const filterButtons = document.querySelectorAll('[data-filter]');
+
+        let allEvents = [];
+
+        function renderEvents(events) {
+            eventsGrid.innerHTML = "";
+
+            if (!events.length) {
+                eventsGrid.innerHTML = `
+                    <div class="col-span-full text-center text-base-content/70">
+                        No events found.
+                    </div>
+                `;
+                return;
+            }
+
+            events.forEach(event => {
+                const title = event.title ?? "Untitled Event";
+                const category = event.category ?? "General";
+                const location = event.location ?? "Unknown Location";
+
+                const card = document.createElement("a");
+                card.href = "event.html";
+                card.className = `card bg-base-100 shadow-xl rounded-xl hover:shadow-2xl transition ${category.toLowerCase()}`;
+
+                card.innerHTML = `
+                    <figure><img src="" alt="${title}"></figure>
+                    <div class="card-body">
+                        <h2 class="card-title text-primary">${title}</h2>
+                        <div class="badge badge-primary">${category}</div>
+                        <p class="text-sm text-base-content/70">${location}</p>
+                        <div class="card-actions justify-end">
+                            <span class="btn btn-primary btn-sm">View Details</span>
+                        </div>
+                    </div>
+                `;
+
+                eventsGrid.appendChild(card);
+            });
+        }
+
+        async function loadEvents() {
+            try {
+                const response = await fetch("/api/v2/events");
+                if (!response.ok) throw new Error("Failed to load events");
+
+                allEvents = await response.json();
+                renderEvents(allEvents);
+            } catch (error) {
+                eventsGrid.innerHTML = `
+                    <div class="col-span-full text-center text-error">
+                        Failed to load events.
+                    </div>
+                `;
+            }
+        }
+
+        searchInput.addEventListener("input", async () => {
+            const query = searchInput.value.trim();
+
+            if (!query) {
+                renderEvents(allEvents);
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/v2/events/search?title=${encodeURIComponent(query)}`);
+                if (!response.ok) throw new Error("Search failed");
+
+                const results = await response.json();
+                renderEvents(results);
+            } catch {
+                renderEvents([]);
+            }
+        });
 
         filterButtons.forEach(btn => {
             btn.addEventListener('click', e => {
                 e.preventDefault();
                 const filter = btn.dataset.filter;
-                Array.from(eventsGrid.children).forEach(card => {
-                    card.style.display = (filter === 'all' || card.classList.contains(filter)) ? '' : 'none';
-                });
+
+                if (filter === "all") {
+                    renderEvents(allEvents);
+                    return;
+                }
+
+                const filtered = allEvents.filter(e =>
+                    (e.category ?? "").toLowerCase() === filter.toLowerCase()
+                );
+
+                renderEvents(filtered);
             });
         });
 
-        searchInput.addEventListener('input', () => {
-            const query = searchInput.value.toLowerCase();
-            Array.from(eventsGrid.children).forEach(card => {
-                const title = card.querySelector('.card-title').textContent.toLowerCase();
-                card.style.display = title.includes(query) ? '' : 'none';
-            });
-        });
+        loadEvents();
     </script>
 
 </body>

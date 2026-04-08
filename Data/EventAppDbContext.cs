@@ -14,6 +14,8 @@ namespace starter_code.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Organizer> Organizers { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,6 +38,22 @@ namespace starter_code.Data
                 .WithMany(u => u.Comments)
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Event)
+                .WithMany(e => e.Bookings)
+                .HasForeignKey(b => b.EventId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.User)
+                .WithMany(u => u.Bookings)
+                .HasForeignKey(b => b.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Booking>()
+                .HasIndex(b => new { b.UserId, b.EventId })
+                .IsUnique();
         }
     }
 }

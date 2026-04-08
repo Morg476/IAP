@@ -12,6 +12,8 @@
         public int? OrganizerId { get; set; }
         public Organizer? Organizer { get; set; }
 
+        public ICollection<Booking>? Bookings { get; set; }
+
         public ICollection<Comment>? Comments { get; set; }
 
 

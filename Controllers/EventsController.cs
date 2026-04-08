@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using starter_code.Data;
 using starter_code.Models;
@@ -40,6 +41,7 @@ namespace starter_code.Controllers
             return Ok(ev);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Create([FromBody] Event dto)
         {
@@ -51,6 +53,7 @@ namespace starter_code.Controllers
             return CreatedAtAction(nameof(GetOne), new { id = dto.Id }, dto);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id:int}")]
         public IActionResult Update(int id, [FromBody] Event updated)
         {
@@ -67,6 +70,7 @@ namespace starter_code.Controllers
             return Ok(existing);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {

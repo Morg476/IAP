@@ -18,7 +18,7 @@ builder.Services.AddDbContext<EventAppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer("Bearer", options =>
+    .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -29,33 +29,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
-
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
             NameClaimType = ClaimTypes.Name,
             RoleClaimType = ClaimTypes.Role
-        };
-
-        options.Events = new JwtBearerEvents
-        {
-            OnMessageReceived = context =>
-            {
-                var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
-
-                if (!string.IsNullOrEmpty(authHeader))
-                {
-                    if (authHeader.StartsWith("Bearer "))
-                        context.Token = authHeader.Substring("Bearer ".Length);
-                    else
-                        context.Token = authHeader;
-                }
-
-                if (string.IsNullOrEmpty(context.Token))
-                {
-                    context.Token = context.Request.Query["token"];
-                }
-
-                return Task.CompletedTask;
-            }
         };
     });
 
@@ -70,6 +46,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -83,6 +60,32 @@ builder.Services.AddSwaggerGen(options =>
             Email = "N1310588@my.ntu.ac.uk"
         }
     });
+
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter your JWT token only"
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
 });
 
 var app = builder.Build();
@@ -91,6 +94,7 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<EventAppDbContext>();
     db.Database.EnsureCreated();
 
+    
     if (!db.Events.Any())
     {
         db.Events.AddRange(
@@ -107,6 +111,20 @@ using (var scope = app.Services.CreateScope())
                 Location = "City Hall"
             }
         );
+
+        db.SaveChanges();
+    }
+
+    
+    if (!db.Users.Any(u => u.Email == "admin@site.com"))
+    {
+        db.Users.Add(new User
+        {
+            Name = "Admin",
+            Email = "admin@site.com",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
+            Role = "Admin"
+        });
 
         db.SaveChanges();
     }

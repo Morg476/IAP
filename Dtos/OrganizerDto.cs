@@ -1,13 +1,9 @@
-﻿namespace starter_code.Models
+﻿namespace starter_code.Dtos
 {
-    public class Organizer
+    public class OrganizerDto
     {
-        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
-
         public string? Email { get; set; }
         public string? Phone { get; set; }
-
-        public ICollection<Event>? Events { get; set; }
     }
 }

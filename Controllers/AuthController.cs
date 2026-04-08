@@ -30,17 +30,12 @@ public class AuthController : ControllerBase
         if (_context.Users.Any(u => u.Email == dto.Email))
             return BadRequest("Email already exists.");
 
-        var role = dto.Role?.Trim();
-
-        if (role != "Admin" && role != "User")
-            role = "User";
-
         var user = new User
         {
             Name = dto.Name,
             Email = dto.Email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-            Role = role
+            Role = "User"
         };
 
         _context.Users.Add(user);

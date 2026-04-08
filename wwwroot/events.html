@@ -159,7 +159,7 @@
                 const location = event.location ?? "Unknown Location";
 
                 const card = document.createElement("a");
-                card.href = "event.html";
+                card.href = `eventDetail.html?id=${event.id}`;
                 card.className = `card bg-base-100 shadow-xl rounded-xl hover:shadow-2xl transition ${category.toLowerCase()}`;
 
                 card.innerHTML = `

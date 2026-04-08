@@ -12,6 +12,8 @@
         public int? OrganizerId { get; set; }
         public Organizer? Organizer { get; set; }
 
-        public List<Comment> Comments { get; set; } = new();
+        public ICollection<Comment>? Comments { get; set; }
+
+
     }
 }

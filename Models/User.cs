@@ -10,5 +10,8 @@ public class User
 
     public string PasswordHash { get; set; } = string.Empty;
 
-    public string Role { get; set; } = "Student";
+    public string Role { get; set; } = "User";
+
+    public ICollection<Comment>? Comments { get; set; }
+    public ICollection<Booking>? Bookings { get; set; }
 }

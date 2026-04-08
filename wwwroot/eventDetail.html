@@ -6,119 +6,120 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="/css/site.css" rel="stylesheet" />
-    <title>Event App</title>
+    <title>Event Details - Event App</title>
 </head>
+<body class="flex flex-col min-h-screen bg-base-200">
 
-<body class="flex flex-col min-h-screen">
-
-    <script src="/_framework/aspnetcore-browser-refresh.js"></script>
-
-    <main class="flex flex-col flex-grow">
-
-        <!-- Navigation -->
-        <nav class="navbar bg-base-300 sticky top-0 z-50 border-b border-base-500">
-            <div class="navbar-start">
-                <div class="dropdown">
-                    <button tabindex="0" class="btn btn-ghost lg:hidden" aria-label="Open menu">☰</button>
-                    <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/events.html">Events</a></li>
-                        <li><a href="/contact.html">Contact</a></li>
-                        <li><a href="/admin.html">Create</a></li>
-                    </ul>
-                </div>
-                <a href="/" class="btn btn-ghost text-xl font-bold">Home</a>
-            </div>
-
-            <div class="navbar-center hidden lg:flex">
-                <ul class="menu menu-horizontal px-1">
+    <nav class="navbar bg-base-300 sticky top-0 z-50 border-b border-base-500">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <button tabindex="0" class="btn btn-ghost lg:hidden" aria-label="Open menu">☰</button>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
                     <li><a href="/">Home</a></li>
                     <li><a href="/events.html">Events</a></li>
                     <li><a href="/contact.html">Contact</a></li>
                     <li><a href="/admin.html">Create</a></li>
                 </ul>
             </div>
-        </nav>
+            <a href="/" class="btn btn-ghost text-xl font-bold">Home</a>
+        </div>
 
-        <!-- Header -->
-        <header class="bg-base-100/80 backdrop-blur border-b border-base-300">
-            <div class="container mx-auto px-4 py-6">
-                <h1 class="text-3xl md:text-4xl font-bold">Event App Overview</h1>
-                <p class="mt-1 text-base-content/70">
-                    Discover what’s happening near you, manage your events, and connect with communities.
-                </p>
-                <a href="/admin.html" class="btn btn-primary mt-4">Create Event</a>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="/">Home</a></li>
+                <li><a href="/events.html">Events</a></li>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/admin.html">Create</a></li>
+            </ul>
+        </div>
+
+        <div class="navbar-end">
+            <a href="/events.html" class="btn btn-outline btn-primary">Back to Events</a>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 py-10 space-y-8">
+        <section class="bg-base-100 rounded-xl shadow-xl p-8">
+            <div id="loadingState" class="text-center py-10">
+                <span class="loading loading-spinner loading-lg text-primary"></span>
+                <p class="mt-4">Loading event...</p>
             </div>
-        </header>
 
-        <!-- Hero -->
-        <section class="hero min-h-screen bg-primary relative">
-            <div class="hero-overlay bg-black/40"></div>
-
-            <div class="hero-content flex-col lg:flex-row gap-8 text-white">
-                <article class="max-w-md text-center lg:text-left">
-                    <h2 class="text-5xl font-bold">Welcome to Event App!</h2>
-                    <p class="py-6">
-                        Whether you're looking to attend events or host your own,
-                        Event App connects people and moments.
-                    </p>
-                    <a href="/events.html" class="btn btn-primary">Browse Events</a>
-                </article>
-
-                <aside class="bg-base-100 text-base-content rounded-xl shadow-lg p-6 w-full lg:w-80">
-                    <h3 class="text-xl font-semibold mb-4">Upcoming Highlights</h3>
-                    <ul class="space-y-3">
-                        <li><span class="badge badge-primary">Nov 25</span> Tec h Meetup</li>
-                        <li><span class="badge badge-secondary">Dec 02</span> Art Workshop</li>
-                        <li><span class="badge badge-accent">Dec 10</span> Community Volunteering</li>
-                    </ul>
-                    <a href="/events.html" class="btn btn-outline mt-4 w-full">View All Events</a>
-                </aside>
-            </div>
-        </section>
-
-        <!-- Stats -->
-        <section class="container mx-auto px-4 py-12">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="stat bg-base-100 p-6 shadow rounded-xl">
-                    <div class="stat-value text-primary">$2.1T</div>
-                    <div class="stat-title">Global Market</div>
-                </div>
-                <div class="stat bg-base-100 p-6 shadow rounded-xl">
-                    <div class="stat-value text-secondary">+53%</div>
-                    <div class="stat-title">Attendance Growth</div>
-                </div>
-                <div class="stat bg-base-100 p-6 shadow rounded-xl">
-                    <div class="stat-value text-accent">80%</div>
-                    <div class="stat-title">Attendee Interest</div>
+            <div id="errorState" class="hidden">
+                <div class="alert alert-error">
+                    <span id="errorText">Unable to load event.</span>
                 </div>
             </div>
-        </section>
 
-        <!-- Info -->
-        <section class="container mx-auto px-4 py-12 bg-base-200 rounded-xl shadow-lg">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="card bg-base-100 p-6 shadow text-center">
-                    <h3 class="card-title text-primary">Connect</h3>
-                    <p>Meet people and build networks.</p>
+            <div id="eventContent" class="hidden">
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+                    <div>
+                        <h1 id="eventTitle" class="text-3xl md:text-4xl font-bold text-primary"></h1>
+                        <p id="eventCategory" class="mt-3 badge badge-secondary badge-lg"></p>
+                    </div>
+                    <div class="flex gap-3 flex-wrap">
+                        <button id="bookBtn" class="btn btn-primary">Book Event</button>
+                        <a href="/events.html" class="btn btn-outline">Browse More Events</a>
+                    </div>
                 </div>
-                <div class="card bg-base-100 p-6 shadow text-center">
-                    <h3 class="card-title text-secondary">Learn</h3>
-                    <p>Grow skills through experiences.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                    <div class="card bg-base-200 shadow">
+                        <div class="card-body">
+                            <h2 class="card-title">Location</h2>
+                            <p id="eventLocation"></p>
+                        </div>
+                    </div>
+
+                    <div class="card bg-base-200 shadow">
+                        <div class="card-body">
+                            <h2 class="card-title">Organizer</h2>
+                            <p id="eventOrganizer">No organizer assigned</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="card bg-base-100 p-6 shadow text-center">
-                    <h3 class="card-title text-accent">Impact</h3>
-                    <p>Create meaningful change.</p>
-                </div>
+
+                <div id="bookingMessage" class="mt-6 text-sm"></div>
             </div>
         </section>
 
+        <section class="bg-base-100 rounded-xl shadow-xl p-8">
+            <h2 class="text-2xl font-bold mb-4">Add a Comment</h2>
+            <p class="text-sm text-base-content/70 mb-4">
+                You must be logged in to post a comment.
+            </p>
+
+            <form id="commentForm" class="space-y-4">
+                <textarea id="commentInput"
+                          name="comment"
+                          placeholder="Write your comment..."
+                          class="textarea textarea-bordered w-full"
+                          rows="4"
+                          required></textarea>
+                <button type="submit" class="btn btn-primary">Post Comment</button>
+            </form>
+
+            <div id="commentMessage" class="mt-4 text-sm"></div>
+        </section>
+
+        <section class="bg-base-100 rounded-xl shadow-xl p-8">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-bold">Comments</h2>
+                <button id="refreshCommentsBtn" class="btn btn-sm btn-outline">Refresh</button>
+            </div>
+
+            <div id="commentsLoading" class="hidden py-4">
+                <span class="loading loading-spinner loading-md text-primary"></span>
+            </div>
+
+            <div id="commentsList" class="space-y-4"></div>
+            <div id="noComments" class="hidden text-base-content/70">No comments yet.</div>
+        </section>
     </main>
 
-    <!-- Footer -->
-    <footer class="footer m:footer-horizontal text-tertiary-content p-10" aria-label="Site footer">
+    <footer class="footer m:footer-horizontal text-tertiary-content p-10">
         <div class="footer-center mt-4 space-y-2">
-            <p>© 2025 Event App. All rights reserved.</p>
+            <p>© 2025 Event App. All rights reserved.</p>
         </div>
         <div class="m:footer space-y-2">
             <p>
@@ -128,6 +129,226 @@
         </div>
     </footer>
 
-    <script src="/js/site.js"></script>
+    <script>
+        const API_BASE = "/api/v2";
+        const params = new URLSearchParams(window.location.search);
+        const eventId = params.get("id");
+
+        const loadingState = document.getElementById("loadingState");
+        const errorState = document.getElementById("errorState");
+        const errorText = document.getElementById("errorText");
+        const eventContent = document.getElementById("eventContent");
+
+        const eventTitle = document.getElementById("eventTitle");
+        const eventCategory = document.getElementById("eventCategory");
+        const eventLocation = document.getElementById("eventLocation");
+        const eventOrganizer = document.getElementById("eventOrganizer");
+
+        const bookBtn = document.getElementById("bookBtn");
+        const bookingMessage = document.getElementById("bookingMessage");
+
+        const commentForm = document.getElementById("commentForm");
+        const commentInput = document.getElementById("commentInput");
+        const commentMessage = document.getElementById("commentMessage");
+
+        const commentsList = document.getElementById("commentsList");
+        const noComments = document.getElementById("noComments");
+        const commentsLoading = document.getElementById("commentsLoading");
+        const refreshCommentsBtn = document.getElementById("refreshCommentsBtn");
+
+        function getToken() {
+            return localStorage.getItem("token");
+        }
+
+        function getAuthHeaders() {
+            const token = getToken();
+            return {
+                "Content-Type": "application/json",
+                ...(token ? { "Authorization": `Bearer ${token}` } : {})
+            };
+        }
+
+        function showError(message) {
+            loadingState.classList.add("hidden");
+            eventContent.classList.add("hidden");
+            errorState.classList.remove("hidden");
+            errorText.textContent = message;
+        }
+
+        async function loadEvent() {
+            if (!eventId) {
+                showError("No event ID was provided in the URL.");
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/events/${eventId}`);
+
+                if (!res.ok) {
+                    throw new Error("Event not found.");
+                }
+
+                const event = await res.json();
+
+                eventTitle.textContent = event.title ?? "Untitled Event";
+                eventCategory.textContent = event.category ?? "Uncategorised";
+                eventLocation.textContent = event.location ?? "No location provided";
+                eventOrganizer.textContent = event.organizer?.name ?? "No organizer assigned";
+
+                loadingState.classList.add("hidden");
+                errorState.classList.add("hidden");
+                eventContent.classList.remove("hidden");
+            } catch (err) {
+                showError(err.message || "Unable to load event.");
+            }
+        }
+
+        function renderComments(comments) {
+            commentsList.innerHTML = "";
+
+            if (!comments || comments.length === 0) {
+                noComments.classList.remove("hidden");
+                return;
+            }
+
+            noComments.classList.add("hidden");
+
+            comments.forEach(comment => {
+                const card = document.createElement("div");
+                card.className = "card bg-base-200 shadow";
+
+                const createdAt = comment.createdAt
+                    ? new Date(comment.createdAt).toLocaleString()
+                    : "Unknown time";
+
+                card.innerHTML = `
+                        <div class="card-body">
+                            <div class="flex justify-between items-start gap-4">
+                                <div>
+                                    <h3 class="font-semibold text-primary">${comment.userName ?? "Anonymous"}</h3>
+                                    <p class="text-sm text-base-content/60">${createdAt}</p>
+                                </div>
+                            </div>
+                            <p class="mt-2">${comment.content ?? ""}</p>
+                        </div>
+                    `;
+
+                commentsList.appendChild(card);
+            });
+        }
+
+        async function loadComments() {
+            if (!eventId) return;
+
+            commentsLoading.classList.remove("hidden");
+            commentsList.innerHTML = "";
+            noComments.classList.add("hidden");
+
+            try {
+                const res = await fetch(`${API_BASE}/comments/${eventId}`);
+
+                if (!res.ok) {
+                    throw new Error("Unable to load comments.");
+                }
+
+                const comments = await res.json();
+                renderComments(comments);
+            } catch (err) {
+                commentsList.innerHTML = `<div class="alert alert-error"><span>${err.message || "Failed to load comments."}</span></div>`;
+            } finally {
+                commentsLoading.classList.add("hidden");
+            }
+        }
+
+        async function handleBooking() {
+            const token = getToken();
+
+            if (!token) {
+                bookingMessage.textContent = "You need to log in before booking an event.";
+                bookingMessage.className = "text-red-500 mt-6";
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/bookings`, {
+                    method: "POST",
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({
+                        eventId: Number(eventId)
+                    })
+                });
+
+                const text = await res.text();
+
+                if (!res.ok) {
+                    throw new Error(text || "Booking failed.");
+                }
+
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch {
+                    data = null;
+                }
+
+                bookingMessage.textContent = data?.ticketCode
+                    ? `Booking successful. Ticket code: ${data.ticketCode}`
+                    : "Booking successful.";
+                bookingMessage.className = "text-green-600 mt-6";
+            } catch (err) {
+                bookingMessage.textContent = `Booking failed: ${err.message}`;
+                bookingMessage.className = "text-red-500 mt-6";
+            }
+        }
+
+        async function handleCommentSubmit(e) {
+            e.preventDefault();
+
+            const token = getToken();
+
+            if (!token) {
+                commentMessage.textContent = "You need to log in before posting a comment.";
+                commentMessage.className = "text-red-500 mt-4";
+                return;
+            }
+
+            const content = commentInput.value.trim();
+
+            if (!content) {
+                commentMessage.textContent = "Comment content is required.";
+                commentMessage.className = "text-red-500 mt-4";
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/comments/${eventId}`, {
+                    method: "POST",
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ content })
+                });
+
+                const text = await res.text();
+
+                if (!res.ok) {
+                    throw new Error(text || "Failed to post comment.");
+                }
+
+                commentMessage.textContent = "Comment posted successfully.";
+                commentMessage.className = "text-green-600 mt-4";
+                commentForm.reset();
+                loadComments();
+            } catch (err) {
+                commentMessage.textContent = `Failed: ${err.message}`;
+                commentMessage.className = "text-red-500 mt-4";
+            }
+        }
+
+        bookBtn.addEventListener("click", handleBooking);
+        commentForm.addEventListener("submit", handleCommentSubmit);
+        refreshCommentsBtn.addEventListener("click", loadComments);
+
+        loadEvent();
+        loadComments();
+    </script>
 </body>
 </html>

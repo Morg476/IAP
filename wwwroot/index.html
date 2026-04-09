@@ -8,6 +8,7 @@
     <link href="/css/site.css" rel="stylesheet" />
     <title>Event App</title>
     <style>
+        /* Smooth header colour change */
         header {
             transition: background-color 0.3s, color 0.3s;
         }
@@ -15,7 +16,7 @@
 </head>
 <body class="flex flex-col min-h-screen bg-base-100">
 
-    <!--Navigation Bar, showcases the dropdown and the setting button-->
+    <!-- Navigation bar with dropdown and settings -->
     <nav id="siteHeader" class="navbar bg-base-300 sticky top-0 z-50 border-b border-base-500">
         <div class="navbar-start">
             <div class="dropdown">
@@ -46,7 +47,7 @@
         </div>
 
         <div class="navbar-end">
-            <!-- Setting button, allows local customisation -->
+            <!-- Settings button for local page customisation -->
             <div class="dropdown dropdown-end">
                 <label tabindex="0" class="btn btn-outline btn-primary">⚙ Settings</label>
                 <div tabindex="0" class="dropdown-content bg-base-100 rounded-box shadow p-4 w-64 space-y-4">
@@ -72,7 +73,7 @@
         </div>
     </nav>
 
-    <!--The hero section of the page -->
+    <!-- Main hero section -->
     <header class="relative bg-cover bg-center min-h-screen bg-primary">
         <div class="absolute inset-0 bg-black/50"></div>
         <div class="container mx-auto px-4 py-24 relative z-10 flex flex-col lg:flex-row items-center gap-12">
@@ -84,6 +85,7 @@
                 <a href="/events.html" class="btn btn-primary btn-lg">Browse Events</a>
             </article>
 
+            <!-- Small highlight panel for featured events -->
             <aside class="bg-base-100 text-base-content rounded-xl shadow-lg p-6 w-full lg:w-80">
                 <h2 class="text-xl font-semibold mb-4">Upcoming Highlights</h2>
                 <ul class="space-y-4">
@@ -112,9 +114,9 @@
                 <a href="/events.html" class="btn btn-outline mt-4 w-full">View All Events</a>
             </aside>
         </div>
-     </header>
+    </header>
 
-    <!--Statistics Section-->
+    <!-- Stats section -->
     <section class="container mx-auto px-4 py-16">
         <div class="text-center mb-12">
             <h2 class="text-3xl font-bold">Why Join or Host Events?</h2>
@@ -141,18 +143,18 @@
         </div>
     </section>
 
-    <!-- Info Cards Section -->
+    <!-- Simple information cards -->
     <section class="container mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="card bg-base-100 shadow-xl border border-base-300 p-6 hover:shadow-2xl transition-shadow text-center">
             <h3 class="card-title text-primary mb-2">Connect with Others</h3>
             <p class="text-base-content/70">
-                Meet like‑minded people who share your passion. Build your network, share ideas, and collaborate.
+                Meet like-minded people who share your passion. Build your network, share ideas, and collaborate.
             </p>
         </div>
         <div class="card bg-base-100 shadow-xl border border-base-300 p-6 hover:shadow-2xl transition-shadow text-center">
             <h3 class="card-title text-secondary mb-2">Learn & Grow</h3>
             <p class="text-base-content/70">
-                Attend expert‑led workshops and inspiring talks — gain new skills and insights that really matter.
+                Attend expert-led workshops and inspiring talks — gain new skills and insights that really matter.
             </p>
         </div>
         <div class="card bg-base-100 shadow-xl border border-base-300 p-6 hover:shadow-2xl transition-shadow text-center">
@@ -180,6 +182,7 @@
         const savedFontSize = localStorage.getItem("fontSize");
         const savedHeaderColor = localStorage.getItem("headerColor");
 
+        // Apply saved settings when the page loads
         if (savedFontSize) {
             body.style.fontSize = savedFontSize;
             fontSizeSelect.value = savedFontSize;
@@ -209,7 +212,7 @@
             localStorage.setItem("fontSize", size);
         });
 
-        // Change header color
+        // Change header colour
         headerColorSelect.addEventListener("change", () => {
             navbar.classList.remove("bg-base-300", "bg-primary", "bg-secondary", "bg-accent");
             navbar.classList.add(headerColorSelect.value);

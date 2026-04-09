@@ -13,11 +13,13 @@ namespace starter_code.Controllers
     {
         private readonly EventAppDbContext _context;
 
+        // Inject the database context
         public OrganizersController(EventAppDbContext context)
         {
             _context = context;
         }
 
+        // Retrieve all organizers
         // GET: /api/v2/organizers
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -28,7 +30,8 @@ namespace starter_code.Controllers
             return Ok(organizers);
         }
 
-        // GET: /api/v2/organizers/5
+        // Retrieve a single organizer by ID
+        // GET: /api/v2/organizers/{id}
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetOne(int id)
         {
@@ -41,6 +44,7 @@ namespace starter_code.Controllers
             return Ok(organizer);
         }
 
+        // Create a new organizer (Admin only)
         // POST: /api/v2/organizers
         [Authorize(Roles = "Admin")]
         [HttpPost]
@@ -62,7 +66,8 @@ namespace starter_code.Controllers
             return CreatedAtAction(nameof(GetOne), new { id = organizer.Id }, organizer);
         }
 
-        // PUT: /api/v2/organizers/5
+        // Update an existing organizer (Admin only)
+        // PUT: /api/v2/organizers/{id}
         [Authorize(Roles = "Admin")]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] OrganizerDto dto)
@@ -81,7 +86,8 @@ namespace starter_code.Controllers
             return Ok(new { message = "Organizer updated successfully.", organizer });
         }
 
-        // DELETE: /api/v2/organizers/5
+        // Delete an organizer (Admin only)
+        // DELETE: /api/v2/organizers/{id}
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)

@@ -40,7 +40,7 @@
         </div>
 
         <div class="navbar-end">
-            <!-- Font size & header colour -->
+            <!-- Simple page settings -->
             <div class="dropdown dropdown-end">
                 <label tabindex="0" class="btn btn-outline btn-primary">⚙ Settings</label>
                 <div tabindex="0" class="dropdown-content bg-base-100 rounded-box shadow p-4 w-64 space-y-4">
@@ -66,7 +66,7 @@
         </div>
     </nav>
 
-    <!-- Page Header -->
+    <!-- Admin page heading -->
     <header class="bg-base-100/80 backdrop-blur border-b border-base-300">
         <div class="container mx-auto px-4 py-6">
             <h1 class="text-3xl md:text-4xl font-bold text-primary">Admin Panel</h1>
@@ -74,10 +74,10 @@
         </div>
     </header>
 
-    <!-- Admin Forms -->
+    <!-- Main admin forms -->
     <main class="flex-grow container mx-auto px-4 py-12 space-y-12">
 
-        <!-- Create Organizer -->
+        <!-- Form for creating organisers -->
         <section class="max-w-3xl mx-auto bg-base-100 rounded-xl shadow-xl p-8">
             <h2 class="text-2xl font-bold mb-4">Create Event Organizer</h2>
             <form id="organizerForm" class="space-y-4">
@@ -89,7 +89,7 @@
             <div id="organizerMessage" class="mt-2 text-sm"></div>
         </section>
 
-        <!-- Create Event -->
+        <!-- Form for creating events -->
         <section class="max-w-3xl mx-auto bg-base-100 rounded-xl shadow-xl p-8">
             <h2 class="text-2xl font-bold mb-4">Create New Event</h2>
             <form id="eventForm" class="space-y-4">
@@ -106,7 +106,7 @@
             <div id="eventMessage" class="mt-2 text-sm"></div>
         </section>
 
-        <!-- Add Comment -->
+        <!-- Form for adding a comment to an event -->
         <section class="max-w-3xl mx-auto bg-base-100 rounded-xl shadow-xl p-8">
             <h2 class="text-2xl font-bold mb-4">Add Comment to Event</h2>
             <form id="commentForm" class="space-y-4">
@@ -124,7 +124,7 @@
     <!-- Footer -->
     <footer class="footer m:footer-horizontal text-tertiary-content p-10">
         <div class="footer-center mt-4 space-y-2">
-            <p>© 2025 Event App. All rights reserved.</p>
+            <p>© 2025 Event App. All rights reserved.</p>
         </div>
         <div class="m:footer space-y-2">
             <p>
@@ -136,8 +136,10 @@
 
     <!-- Scripts -->
     <script>
+        // Base route for the API
         const API_BASE = "/api/v2";
 
+        // Adds the saved token if the user is logged in
         function getAuthHeaders() {
             const token = localStorage.getItem("token");
             return {
@@ -146,6 +148,7 @@
             };
         }
 
+        // Handles organiser creation
         async function handleOrganizerForm() {
             const form = document.getElementById("organizerForm");
             const msgDiv = document.getElementById("organizerMessage");
@@ -186,6 +189,7 @@
             });
         }
 
+        // Handles event creation
         async function handleEventForm() {
             const form = document.getElementById("eventForm");
             const msgDiv = document.getElementById("eventMessage");
@@ -227,6 +231,7 @@
             });
         }
 
+        // Handles comment creation for the selected event
         async function handleCommentForm() {
             const form = document.getElementById("commentForm");
             const msgDiv = document.getElementById("commentMessage");
@@ -267,6 +272,7 @@
             });
         }
 
+        // Loads events into the dropdown for the comment form
         async function loadEventsOptions() {
             const select = document.querySelector("#commentForm select[name='eventId']");
             select.innerHTML = '<option value="">Select Event</option>';
@@ -286,6 +292,7 @@
             }
         }
 
+        // Start all form handlers when the page loads
         handleOrganizerForm();
         handleEventForm();
         handleCommentForm();
@@ -303,6 +310,7 @@
             "bg-accent": "#37cdbe"
         };
 
+        // Load saved settings from localStorage
         const savedFontSize = localStorage.getItem("fontSize");
         const savedHeaderColor = localStorage.getItem("headerColor");
 
@@ -317,6 +325,7 @@
             headerColorSelect.value = savedHeaderColor;
         }
 
+        // Update font size setting
         fontSizeSelect.addEventListener("change", () => {
             let size;
             switch (fontSizeSelect.value) {
@@ -328,6 +337,7 @@
             localStorage.setItem("fontSize", fontSizeSelect.value);
         });
 
+        // Update header colour setting
         headerColorSelect.addEventListener("change", () => {
             header.style.backgroundColor = colors[headerColorSelect.value];
             localStorage.setItem("headerColor", headerColorSelect.value);

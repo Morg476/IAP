@@ -14,12 +14,13 @@ namespace starter_code.Controllers
     {
         private readonly EventAppDbContext _context;
 
+        // Inject the database context
         public BookingsController(EventAppDbContext context)
         {
             _context = context;
         }
 
-        // POST: /api/v2/bookings
+        // Create a new booking for the logged-in user
         [Authorize(Roles = "User,Admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateBookingDto dto)
@@ -66,7 +67,7 @@ namespace starter_code.Controllers
             });
         }
 
-        // GET: /api/v2/bookings/me
+        // Return bookings for the current user
         [Authorize(Roles = "User,Admin")]
         [HttpGet("me")]
         public async Task<IActionResult> GetMyBookings()
@@ -96,7 +97,7 @@ namespace starter_code.Controllers
             return Ok(bookings);
         }
 
-        // GET: /api/v2/bookings
+        // Return all bookings for admin users
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -121,7 +122,7 @@ namespace starter_code.Controllers
             return Ok(bookings);
         }
 
-        // DELETE: /api/v2/bookings/5
+        // Cancel a booking if it belongs to the user or the user is an admin
         [Authorize(Roles = "User,Admin")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)

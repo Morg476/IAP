@@ -8,15 +8,24 @@ using starter_code.Models;
 using starter_code.Middleware;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
-builder.Services.AddControllers();
 
+// Add controllers and ignore JSON reference loops
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
+
+// Set up the SQLite database
 builder.Services.AddDbContext<EventAppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
+// Set up JWT authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -35,8 +44,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Enable role-based authorization
 builder.Services.AddAuthorization();
 
+// Allow requests from the frontend
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -47,6 +58,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 
+// Set up Swagger and JWT support
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -60,7 +72,6 @@ builder.Services.AddSwaggerGen(options =>
             Email = "N1310588@my.ntu.ac.uk"
         }
     });
-
 
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -89,12 +100,14 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
+
+// Create the database and seed some starter data
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<EventAppDbContext>();
     db.Database.EnsureCreated();
 
-    
+    // Seed starter events
     if (!db.Events.Any())
     {
         db.Events.AddRange(
@@ -115,7 +128,7 @@ using (var scope = app.Services.CreateScope())
         db.SaveChanges();
     }
 
-    
+    // Seed an admin account for testing and management
     if (!db.Users.Any(u => u.Email == "admin@site.com"))
     {
         db.Users.Add(new User
@@ -129,6 +142,7 @@ using (var scope = app.Services.CreateScope())
         db.SaveChanges();
     }
 }
+
 // Enable Swagger
 app.UseSwagger();
 
@@ -138,7 +152,7 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = "swagger";
 });
 
-// Start Mk5202 Initialiser
+// Start the MK5202 initialiser
 Initialiser.Start();
 
 if (!app.Environment.IsDevelopment())
@@ -147,8 +161,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection()
-    ;
+app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -156,18 +169,17 @@ app.UseRouting();
 app.UseCors();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
 
+// Redirect the root URL to the homepage
 app.UseRedirectRoot();
 
 app.MapRazorPages();
-
 app.MapControllers();
 
 app.MapGet("/", () => "Hello World!");
 
-// API Checker endpoint
+// Run the API checker and return the results
 app.MapGet("/api/checker/run", async (IConfiguration config) =>
 {
     var baseUrl = config["ApiChecker:BaseUrl"] ?? "http://localhost:5201";

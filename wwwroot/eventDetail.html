@@ -10,6 +10,7 @@
 </head>
 <body class="flex flex-col min-h-screen bg-base-200">
 
+    <!-- Main navigation -->
     <nav class="navbar bg-base-300 sticky top-0 z-50 border-b border-base-500">
         <div class="navbar-start">
             <div class="dropdown">
@@ -39,6 +40,7 @@
     </nav>
 
     <main class="flex-grow container mx-auto px-4 py-10 space-y-8">
+        <!-- Event details section -->
         <section class="bg-base-100 rounded-xl shadow-xl p-8">
             <div id="loadingState" class="text-center py-10">
                 <span class="loading loading-spinner loading-lg text-primary"></span>
@@ -83,6 +85,7 @@
             </div>
         </section>
 
+        <!-- Comment form -->
         <section class="bg-base-100 rounded-xl shadow-xl p-8">
             <h2 class="text-2xl font-bold mb-4">Add a Comment</h2>
             <p class="text-sm text-base-content/70 mb-4">
@@ -102,6 +105,7 @@
             <div id="commentMessage" class="mt-4 text-sm"></div>
         </section>
 
+        <!-- Event comments list -->
         <section class="bg-base-100 rounded-xl shadow-xl p-8">
             <div class="flex items-center justify-between mb-4">
                 <h2 class="text-2xl font-bold">Comments</h2>
@@ -130,6 +134,7 @@
     </footer>
 
     <script>
+        // Base API route and event ID from the URL
         const API_BASE = "/api/v2";
         const params = new URLSearchParams(window.location.search);
         const eventId = params.get("id");
@@ -156,10 +161,12 @@
         const commentsLoading = document.getElementById("commentsLoading");
         const refreshCommentsBtn = document.getElementById("refreshCommentsBtn");
 
+        // Gets the saved JWT token
         function getToken() {
             return localStorage.getItem("token");
         }
 
+        // Adds auth headers when a token exists
         function getAuthHeaders() {
             const token = getToken();
             return {
@@ -168,6 +175,7 @@
             };
         }
 
+        // Shows an error if the event cannot be loaded
         function showError(message) {
             loadingState.classList.add("hidden");
             eventContent.classList.add("hidden");
@@ -175,6 +183,7 @@
             errorText.textContent = message;
         }
 
+        // Loads one event from the API
         async function loadEvent() {
             if (!eventId) {
                 showError("No event ID was provided in the URL.");
@@ -203,6 +212,7 @@
             }
         }
 
+        // Renders the comment list on the page
         function renderComments(comments) {
             commentsList.innerHTML = "";
 
@@ -222,21 +232,22 @@
                     : "Unknown time";
 
                 card.innerHTML = `
-                        <div class="card-body">
-                            <div class="flex justify-between items-start gap-4">
-                                <div>
-                                    <h3 class="font-semibold text-primary">${comment.userName ?? "Anonymous"}</h3>
-                                    <p class="text-sm text-base-content/60">${createdAt}</p>
+                            <div class="card-body">
+                                <div class="flex justify-between items-start gap-4">
+                                    <div>
+                                        <h3 class="font-semibold text-primary">${comment.userName ?? "Anonymous"}</h3>
+                                        <p class="text-sm text-base-content/60">${createdAt}</p>
+                                    </div>
                                 </div>
+                                <p class="mt-2">${comment.content ?? ""}</p>
                             </div>
-                            <p class="mt-2">${comment.content ?? ""}</p>
-                        </div>
-                    `;
+                        `;
 
                 commentsList.appendChild(card);
             });
         }
 
+        // Loads comments for the current event
         async function loadComments() {
             if (!eventId) return;
 
@@ -260,6 +271,7 @@
             }
         }
 
+        // Sends a booking request for the current event
         async function handleBooking() {
             const token = getToken();
 
@@ -301,6 +313,7 @@
             }
         }
 
+        // Posts a new comment for the current event
         async function handleCommentSubmit(e) {
             e.preventDefault();
 
@@ -343,10 +356,12 @@
             }
         }
 
+        // Wire up page actions
         bookBtn.addEventListener("click", handleBooking);
         commentForm.addEventListener("submit", handleCommentSubmit);
         refreshCommentsBtn.addEventListener("click", loadComments);
 
+        // Load the event and its comments when the page opens
         loadEvent();
         loadComments();
     </script>

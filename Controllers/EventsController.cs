@@ -12,11 +12,14 @@ namespace starter_code.Controllers
     {
         private readonly EventAppDbContext _context;
 
+        // Inject the database context
         public EventsController(EventAppDbContext context)
         {
             _context = context;
         }
 
+        // Retrieve all events with their comments and organizers
+        // GET: /api/v2/events
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -28,6 +31,8 @@ namespace starter_code.Controllers
             return Ok(events);
         }
 
+        // Retrieve a single event by ID with related data
+        // GET: /api/v2/events/{id}
         [HttpGet("{id:int}")]
         public IActionResult GetOne(int id)
         {
@@ -41,6 +46,8 @@ namespace starter_code.Controllers
             return Ok(ev);
         }
 
+        // Create a new event (Admin only)
+        // POST: /api/v2/events
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Create([FromBody] Event dto)
@@ -53,6 +60,8 @@ namespace starter_code.Controllers
             return CreatedAtAction(nameof(GetOne), new { id = dto.Id }, dto);
         }
 
+        // Update an existing event (Admin only)
+        // PUT: /api/v2/events/{id}
         [Authorize(Roles = "Admin")]
         [HttpPut("{id:int}")]
         public IActionResult Update(int id, [FromBody] Event updated)
@@ -70,6 +79,8 @@ namespace starter_code.Controllers
             return Ok(existing);
         }
 
+        // Delete an event (Admin only)
+        // DELETE: /api/v2/events/{id}
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
@@ -83,8 +94,13 @@ namespace starter_code.Controllers
             return NoContent();
         }
 
+        // Search for events using one or more query parameters
+        // GET: /api/v2/events/search?title=&category=&location=
         [HttpGet("search")]
-        public IActionResult Search([FromQuery] string? title, [FromQuery] string? category, [FromQuery] string? location)
+        public IActionResult Search(
+            [FromQuery] string? title,
+            [FromQuery] string? category,
+            [FromQuery] string? location)
         {
             var query = _context.Events.AsQueryable();
 

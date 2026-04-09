@@ -17,13 +17,14 @@ public class AuthController : ControllerBase
     private readonly EventAppDbContext _context;
     private readonly IConfiguration _config;
 
+    // Inject database context and config settings
     public AuthController(EventAppDbContext context, IConfiguration config)
     {
         _context = context;
         _config = config;
     }
 
-    // ---------------- REGISTER ----------------
+    // Register a new user account
     [HttpPost("register")]
     public IActionResult Register(RegisterDto dto)
     {
@@ -44,7 +45,7 @@ public class AuthController : ControllerBase
         return Ok("User registered successfully.");
     }
 
-    // ---------------- LOGIN ----------------
+    // Log the user in and return a JWT
     [HttpPost("login")]
     public IActionResult Login(LoginDto dto)
     {
@@ -60,7 +61,7 @@ public class AuthController : ControllerBase
         return Ok(new { token });
     }
 
-    // ---------------- JWT GENERATOR ----------------
+    // Create the JWT with the user's claims and role
     private string GenerateJwtToken(User user)
     {
         var claims = new[]

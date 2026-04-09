@@ -40,7 +40,7 @@
         </div>
 
         <div class="navbar-end">
-            <!-- Font size & header colour -->
+            <!-- Basic page settings -->
             <div class="dropdown dropdown-end">
                 <label tabindex="0" class="btn btn-outline btn-primary">⚙ Settings</label>
                 <div tabindex="0" class="dropdown-content bg-base-100 rounded-box shadow p-4 w-64 space-y-4">
@@ -66,7 +66,7 @@
         </div>
     </nav>
 
-    <!-- Header -->
+    <!-- Events page header -->
     <header class="bg-base-100/80 backdrop-blur border-b border-base-300">
         <div class="container mx-auto px-4 py-6 flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <div>
@@ -75,10 +75,10 @@
             </div>
 
             <div class="flex flex-col sm:flex-row gap-2 items-start sm:items-center">
-                <!-- Search -->
+                <!-- Search box -->
                 <input id="search-input" type="text" placeholder="Search events…" class="input input-bordered w-full sm:w-64" />
 
-                <!-- Filter Dropdown -->
+                <!-- Filter menu -->
                 <div class="dropdown">
                     <button tabindex="0" class="btn btn-outline btn-primary">
                         Filter
@@ -99,7 +99,7 @@
         </div>
     </header>
 
-    <!-- Stats -->
+    <!-- Quick stats section -->
     <section class="container mx-auto px-4 mt-6 grid grid-cols-1 sm:grid-cols-3 gap-6">
         <div class="stat bg-base-100 rounded-xl shadow p-6">
             <div class="stat-title text-base-content/70">Upcoming</div>
@@ -118,15 +118,15 @@
         </div>
     </section>
 
-    <!-- Events Grid -->
+    <!-- Event cards get rendered here -->
     <main class="container mx-auto px-4 py-10">
-        <div id="events-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div
+        <div id="events-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>
     </main>
 
     <!-- Footer -->
     <footer class="footer text-tertiary-content p-10 mt-auto bg-base-200">
         <div class="footer-center space-y-2">
-            <p>© 2025 Event App. All rights reserved.</p>
+            <p>© 2025 Event App. All rights reserved.</p>
             <p>
                 Created by <strong>Morgan Osborn</strong><br>
                 Contact: 0115 676 5672
@@ -141,15 +141,16 @@
 
         let allEvents = [];
 
+        // Renders the event cards on the page
         function renderEvents(events) {
             eventsGrid.innerHTML = "";
 
             if (!events.length) {
                 eventsGrid.innerHTML = `
-                    <div class="col-span-full text-center text-base-content/70">
-                        No events found.
-                    </div>
-                `;
+                        <div class="col-span-full text-center text-base-content/70">
+                            No events found.
+                        </div>
+                    `;
                 return;
             }
 
@@ -163,21 +164,22 @@
                 card.className = `card bg-base-100 shadow-xl rounded-xl hover:shadow-2xl transition ${category.toLowerCase()}`;
 
                 card.innerHTML = `
-                    <figure><img src="" alt="${title}"></figure>
-                    <div class="card-body">
-                        <h2 class="card-title text-primary">${title}</h2>
-                        <div class="badge badge-primary">${category}</div>
-                        <p class="text-sm text-base-content/70">${location}</p>
-                        <div class="card-actions justify-end">
-                            <span class="btn btn-primary btn-sm">View Details</span>
+                        <figure><img src="" alt="${title}"></figure>
+                        <div class="card-body">
+                            <h2 class="card-title text-primary">${title}</h2>
+                            <div class="badge badge-primary">${category}</div>
+                            <p class="text-sm text-base-content/70">${location}</p>
+                            <div class="card-actions justify-end">
+                                <span class="btn btn-primary btn-sm">View Details</span>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
 
                 eventsGrid.appendChild(card);
             });
         }
 
+        // Loads all events from the API
         async function loadEvents() {
             try {
                 const response = await fetch("/api/v2/events");
@@ -187,13 +189,14 @@
                 renderEvents(allEvents);
             } catch (error) {
                 eventsGrid.innerHTML = `
-                    <div class="col-span-full text-center text-error">
-                        Failed to load events.
-                    </div>
-                `;
+                        <div class="col-span-full text-center text-error">
+                            Failed to load events.
+                        </div>
+                    `;
             }
         }
 
+        // Searches events by title as the user types
         searchInput.addEventListener("input", async () => {
             const query = searchInput.value.trim();
 
@@ -213,6 +216,7 @@
             }
         });
 
+        // Filters events by category
         filterButtons.forEach(btn => {
             btn.addEventListener('click', e => {
                 e.preventDefault();

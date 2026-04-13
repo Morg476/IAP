@@ -179,8 +179,25 @@
 
         // Loads messages if the current user is allowed to see them
         async function loadMessages() {
+            const token = localStorage.getItem("token");
+
+            // If no token exists, do not attempt to load messages
+            if (!token) {
+                messagesList.innerHTML = "<li>Admin login required to view messages.</li>";
+                return;
+            }
+
             try {
-                const response = await fetch(API_URL);
+                const response = await fetch(API_URL, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Unauthorized");
+                }
+
                 const messages = await response.json();
                 messagesList.innerHTML = "";
 
@@ -188,14 +205,15 @@
                     const li = document.createElement("li");
                     li.className = "p-4 bg-base-200 rounded-lg shadow";
                     li.innerHTML = `
-                            <strong>${msg.name ?? "Unknown"}</strong> (${msg.email ?? "No email"})<br>
-                            ${msg.phone ? "📞 " + msg.phone + "<br>" : ""}
-                            <p>${msg.content ?? ""}</p>
-        `;
+                <strong>${msg.name ?? "Unknown"}</strong>
+                (${msg.email ?? "No email"})<br>
+                ${msg.phone ? "📞 " + msg.phone + "<br>" : ""}
+                <p>${msg.content ?? ""}</p`;
                     messagesList.appendChild(li);
                 });
             } catch (err) {
-                messagesList.innerHTML = "<li>Messages are only visible to admins.</li>";
+                messagesList.innerHTML =
+                    "<li>Messages are only visible to admins.</li>";
             }
         }
 
